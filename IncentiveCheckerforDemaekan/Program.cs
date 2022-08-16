@@ -11,9 +11,9 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知を行なう
         /// </summary>
         /// <param name="args">Lineアクセストークン</param>
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
-            string message ;
+            string message;
             try
             {
                 message = MakeSendMessage();
@@ -22,9 +22,15 @@ namespace IncentiveCheckerforDemaekan
             {
                 message = ex.Message;
             }
-
-            Task task = new Line(args[0]).SendMessage(message);
-            task.Wait();
+            if(args.Length > 0 )
+            {
+                try 
+                { 
+                    Task task = new Line(args[0]).SendMessage(message);
+                    task.Wait();
+                }
+                catch { }
+            }
         }
 
         /// <summary>
@@ -33,7 +39,7 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        public static string MakeSendMessage()
+        private static string MakeSendMessage()
         {
             var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (locationPath != null)
@@ -52,7 +58,6 @@ namespace IncentiveCheckerforDemaekan
                 Dictionary<string, Dictionary<string, string>> map = new();
                 using (WebDriverOpration webDriver = new(options.ToArray()))
                 {
-
                     string filePath = Path.Combine(locationPath, "TargetPlace.csv");
                     List<string[]> targetPlace = File.ReadTargetPlace(filePath);
                     

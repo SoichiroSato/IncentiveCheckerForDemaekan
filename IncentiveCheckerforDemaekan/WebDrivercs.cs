@@ -25,8 +25,6 @@ namespace IncentiveCheckerforDemaekan
         public WebDriver(string[]? options = null)
         {
             new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-
-            // WebDriverManagerが保存した場所
             var driverVersion = new ChromeConfig().GetMatchingBrowserVersion();
             var driverPath = $"./Chrome/{driverVersion}/X64/";
             DriverService = ChromeDriverService.CreateDefaultService(driverPath);
@@ -40,7 +38,6 @@ namespace IncentiveCheckerforDemaekan
                 chromeOptions.AddArguments(options);
                 Driver = new ChromeDriver(DriverService, chromeOptions);
             }
-            //ドライバの起動場所を設定
         }
 
         /// <summary>
