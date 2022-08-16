@@ -1,8 +1,7 @@
 {
   "profiles": {
     "IncentiveCheckerforDemaekan": {
-      "commandName": "Project",
-      "commandLineArgs": "s8R8PJnlKiYATFRJsQEyZUiphMrn7QOkeCKZXhttbue"
+      "commandName": "Project"
     }
   }
 }

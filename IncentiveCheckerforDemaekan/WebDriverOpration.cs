@@ -3,11 +3,24 @@ using OpenQA.Selenium.Support.UI;
 
 namespace IncentiveCheckerforDemaekan
 {
+    /// <summary>
+    /// 出前館 市区町村別ブースト情報サイト操作クラス
+    /// </summary>
     public class WebDriverOpration : WebDriver
     {
-
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="options">choromeオプションに設定する文字列配列</param>
         public WebDriverOpration(string[]? options = null) :base(options){}
 
+        /// <summary>
+        /// 出前館 市区町村別ブースト情報サイトから明日のインセンティブ情報を取得する
+        /// </summary>
+        /// <param name="area">エリア</param>
+        /// <param name="prefecture">都道府県</param>
+        /// <param name="city">市区町村</param>
+        /// <returns>インセンティブ情報</returns>
         public Dictionary<string,string> GetInsentiveInfo(string area,string prefecture,string city)
         {
             Driver.Navigate().GoToUrl("https://cdn.demae-can.com/contents/driver/boost/area/index.html");
@@ -20,7 +33,8 @@ namespace IncentiveCheckerforDemaekan
             var table = Driver.FindElement(By.Id("resultmap"));
             var thead = table.FindElement(By.Id("resulthead"));
             var columns = thead.FindElements(By.TagName("th"));
-            List<string> key = new();  
+            List<string> key = new(); 
+            //column[0]は市区町村
             for(int i = 1; i < columns.Count; i++)
             {
                 key.Add(columns[i].Text);
@@ -31,7 +45,8 @@ namespace IncentiveCheckerforDemaekan
             foreach (var row in rows)
             {
                 var td = row.FindElements(By.TagName("td"));
-                if(td[0].Text != city) { continue; }
+                //td[0]は市区町村名
+                if (td[0].Text != city) { continue; }
                 for(int i =1;i<td.Count;i++)
                 {
                     value.Add(td[i].Text);

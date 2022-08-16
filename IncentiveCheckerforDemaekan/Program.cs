@@ -3,11 +3,14 @@ using System.Reflection;
 
 namespace IncentiveCheckerforDemaekan
 {
-    /// <summary>
-    /// 出前館 市区町村別ブースト情報サイトからcsvファイル記載の
-    /// </summary>
     class Program
     {
+        /// <summary>
+        /// 出前館 市区町村別ブースト情報サイトから
+        /// csvファイル記載地域の明日のインセンティブ情報を取得して
+        /// Line通知を行なう
+        /// </summary>
+        /// <param name="args">Lineアクセストークン</param>
         public static void Main(string[] args)
         {
             string message ;
@@ -24,6 +27,12 @@ namespace IncentiveCheckerforDemaekan
             task.Wait();
         }
 
+        /// <summary>
+        /// 出前館 市区町村別ブースト情報サイトから
+        /// csvファイル記載地域の明日のインセンティブ情報を取得して
+        /// Line通知メッセージを作成する
+        /// </summary>
+        /// <returns>Line通知メッセージ</returns>
         public static string MakeSendMessage()
         {
             var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
