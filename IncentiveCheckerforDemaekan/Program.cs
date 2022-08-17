@@ -11,16 +11,19 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知を行なう
         /// </summary>
         /// <param name="args">Lineアクセストークン</param>
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             string message;
+            int resCode;
             try
             {
                 message = MakeSendMessage();
+                resCode = 0;
             }
             catch(Exception ex)
             {
                 message = ex.Message;
+                resCode = 1;
             }
             if(args.Length > 0 )
             {
@@ -29,8 +32,9 @@ namespace IncentiveCheckerforDemaekan
                     Task task = new Line(args[0]).SendMessage(message);
                     task.Wait();
                 }
-                catch { }
+                catch { resCode = 1; }
             }
+            return resCode;
         }
 
         /// <summary>
