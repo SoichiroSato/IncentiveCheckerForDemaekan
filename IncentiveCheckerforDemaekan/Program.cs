@@ -3,14 +3,17 @@ using System.Reflection;
 
 namespace IncentiveCheckerforDemaekan
 {
-    /// <summary>
-    /// 出前館 市区町村別ブースト情報サイトからcsvファイル記載の
-    /// </summary>
     class Program
     {
-        public static void Main(string[] args)
+        /// <summary>
+        /// 出前館 市区町村別ブースト情報サイトから
+        /// csvファイル記載地域の明日のインセンティブ情報を取得して
+        /// Line通知を行なう
+        /// </summary>
+        /// <param name="args">Lineアクセストークン</param>
+        static void Main(string[] args)
         {
-            string message ;
+            string message;
             try
             {
                 message = MakeSendMessage();
@@ -19,12 +22,24 @@ namespace IncentiveCheckerforDemaekan
             {
                 message = ex.Message;
             }
-
-            Task task = new Line(args[0]).SendMessage(message);
-            task.Wait();
+            if(args.Length > 0 )
+            {
+                try 
+                { 
+                    Task task = new Line(args[0]).SendMessage(message);
+                    task.Wait();
+                }
+                catch { }
+            }
         }
 
-        public static string MakeSendMessage()
+        /// <summary>
+        /// 出前館 市区町村別ブースト情報サイトから
+        /// csvファイル記載地域の明日のインセンティブ情報を取得して
+        /// Line通知メッセージを作成する
+        /// </summary>
+        /// <returns>Line通知メッセージ</returns>
+        private static string MakeSendMessage()
         {
             var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             if (locationPath != null)
@@ -43,7 +58,6 @@ namespace IncentiveCheckerforDemaekan
                 Dictionary<string, Dictionary<string, string>> map = new();
                 using (WebDriverOpration webDriver = new(options.ToArray()))
                 {
-
                     string filePath = Path.Combine(locationPath, "TargetPlace.csv");
                     List<string[]> targetPlace = File.ReadTargetPlace(filePath);
                     
