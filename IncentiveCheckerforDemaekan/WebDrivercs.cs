@@ -24,9 +24,10 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="options">choromeオプションに設定する文字列配列</param>
         public WebDriver(string[]? options = null)
         {
-            new DriverManager().SetUpDriver(new ChromeConfig(), VersionResolveStrategy.MatchingBrowser);
-            var driverVersion = new ChromeConfig().GetMatchingBrowserVersion();
-            var driverPath = $"./Chrome/{driverVersion}/X64/";
+            var chromeConfig = new ChromeConfig();
+            new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
+            string driverVersion = chromeConfig.GetMatchingBrowserVersion();
+            string driverPath = $"./Chrome/{driverVersion}/X64/";
             DriverService = ChromeDriverService.CreateDefaultService(driverPath);
             if(options == null)
             {
@@ -34,7 +35,7 @@ namespace IncentiveCheckerforDemaekan
             }
             else
             {
-                ChromeOptions chromeOptions = new();
+                var chromeOptions = new ChromeOptions();
                 chromeOptions.AddArguments(options);
                 Driver = new ChromeDriver(DriverService, chromeOptions);
             }

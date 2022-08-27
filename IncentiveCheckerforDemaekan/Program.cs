@@ -56,21 +56,19 @@ namespace IncentiveCheckerforDemaekan
                     "--blink-settings=imagesEnabled=false",
                     "--lang=ja",
                     "--proxy-server='direct://'",
-                    "--proxy-bypass-list=*",
                     "--proxy-bypass-list=*"
                 };
-                Dictionary<string, Dictionary<string, string>> map = new();
-                using (WebDriverOpration webDriver = new(options.ToArray()))
+                var map = new Dictionary<string, Dictionary<string, string>>();
+                using (var webDriver = new WebDriverOpration(options.ToArray()))
                 {
                     string filePath = Path.Combine(locationPath, "TargetPlace.csv");
                     List<string[]> targetPlace = File.ReadTargetPlace(filePath);
-                    
                     foreach (string[] address in targetPlace)
                     {
                         map.Add(address[1]+address[2],webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
                     }
                 }
-                StringBuilder stringBuilder = new();
+                var stringBuilder = new StringBuilder();
                 stringBuilder.AppendLine();
                 stringBuilder.AppendLine(DateTime.Now.AddDays(1).ToString("MM/dd") + "のインセンティブ情報");
                 stringBuilder.AppendLine();
@@ -79,7 +77,11 @@ namespace IncentiveCheckerforDemaekan
                     stringBuilder.AppendLine(address);
                     foreach(var(time, magnification) in incentive)
                     {
-                        stringBuilder.AppendLine($"{time}:{magnification}");
+                        //1.1倍以上の時間帯だけ抽出する
+                        if (double.TryParse(magnification, out double val) && val > 1.0)
+                        {
+                            stringBuilder.AppendLine($"{time}:{magnification}");
+                        }
                     }
                     stringBuilder.AppendLine();
                 }

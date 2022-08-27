@@ -14,22 +14,20 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>ファイルの中身</returns>
         public static List<string[]> ReadTargetPlace(string path)
         {
-            using (TextFieldParser txtParser = new(path))
+            using var txtParser = new TextFieldParser(path);
+            var ret = new List<string[]>();
+            txtParser.SetDelimiters(",");
+            //一行目はヘッダー
+            txtParser.ReadFields();
+            while (!txtParser.EndOfData)
             {
-                List<string[]> ret = new();   
-                txtParser.SetDelimiters(",");
-                //一行目はヘッダー
-                txtParser.ReadFields();
-                while (!txtParser.EndOfData)
+                string[]? value = txtParser.ReadFields();
+                if (value != null)
                 {
-                    string[]? value = txtParser.ReadFields();
-                    if (value != null)
-                    {
-                        ret.Add(value);
-                    }
+                    ret.Add(value);
                 }
-                return ret;
             }
+            return ret;
         }
     }
 }
