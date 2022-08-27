@@ -62,7 +62,7 @@ namespace IncentiveCheckerforDemaekan
                 using (var webDriver = new WebDriverOpration(options.ToArray()))
                 {
                     string filePath = Path.Combine(locationPath, "TargetPlace.csv");
-                    List<string[]> targetPlace = File.ReadTargetPlace(filePath);
+                    List<string[]> targetPlace = File.ReadTargetPlace(filePath,1);
                     foreach (string[] address in targetPlace)
                     {
                         map.Add(address[1]+address[2],webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
