@@ -33,36 +33,20 @@ namespace IncentiveCheckerforDemaekan
             var table = Driver.FindElement(By.Id("resultmap"));
             var thead = table.FindElement(By.Id("resulthead"));
             var columns = thead.FindElements(By.TagName("th"));
-            List<string> key = new(); 
-            //column[0]は市区町村
-            for(int i = 1; i < columns.Count; i++)
-            {
-                key.Add(columns[i].Text);
-            }
             var tbody = table.FindElement(By.Id("resultbody"));
             var rows = tbody.FindElements(By.TagName("tr"));
-            List<string> value = new();
+            var dic = new Dictionary<string, string>();
             foreach (var row in rows)
             {
                 var td = row.FindElements(By.TagName("td"));
-                //td[0]は市区町村名
+                //column[0]は市区町村
                 if (td[0].Text != city) { continue; }
-                for(int i =1;i<td.Count;i++)
+                //td[0]とcolumn[0]は読み取らない
+                for (int i =1;i<td.Count;i++)
                 {
-                    value.Add(td[i].Text);
+                    dic.Add(columns[i].Text, td[i].Text);
                 }
-                if(value.Count > 0) { break; }
-            }
-            Dictionary<string,string> dic = new();
-            if(key.Count == value.Count)
-            {
-                for(int i = 0; i < value.Count; i++)
-                {
-                    if (double.TryParse(value[i], out double val) && val > 1.0)
-                    {
-                        dic.Add(key[i], value[i]);
-                    }
-                }
+                if(dic.Count > 0) { break; }
             }
             return dic;
         }

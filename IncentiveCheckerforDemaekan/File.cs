@@ -11,25 +11,26 @@ namespace IncentiveCheckerforDemaekan
         /// csvファイルを読み取る
         /// </summary>
         /// <param name="path">ファイルのフルパス</param>
+        /// <param name="index">読み取りスタート行のインデックス</param>
         /// <returns>ファイルの中身</returns>
-        public static List<string[]> ReadTargetPlace(string path)
+        public static List<string[]> ReadTargetPlace(string path,int index = 0)
         {
-            using (TextFieldParser txtParser = new(path))
+            using var txtParser = new TextFieldParser(path);
+            var ret = new List<string[]>();
+            txtParser.SetDelimiters(",");
+            for(int i = 0; i < index; i++)
             {
-                List<string[]> ret = new();   
-                txtParser.SetDelimiters(",");
-                //一行目はヘッダー
                 txtParser.ReadFields();
-                while (!txtParser.EndOfData)
-                {
-                    string[]? value = txtParser.ReadFields();
-                    if (value != null)
-                    {
-                        ret.Add(value);
-                    }
-                }
-                return ret;
             }
+            while (!txtParser.EndOfData)
+            {
+                string[]? value = txtParser.ReadFields();
+                if (value != null)
+                {
+                    ret.Add(value);
+                }
+            }
+            return ret;
         }
     }
 }

@@ -26,12 +26,10 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>Line通知メッセージを送信するタスク</returns>
         public async Task SendMessage(string message)
         {
-            using (HttpClient client = new())
-            {
-                var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "message", message } });
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-                await client.PostAsync("https://notify-api.line.me/api/notify", content);
-            }
+            using var client = new HttpClient();
+            var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "message", message } });
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
+            await client.PostAsync("https://notify-api.line.me/api/notify", content);
         }
 
 

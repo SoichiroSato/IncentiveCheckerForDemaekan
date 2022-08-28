@@ -46,46 +46,56 @@ namespace IncentiveCheckerforDemaekan
         private static string MakeSendMessage()
         {
             var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (locationPath != null)
+            if (locationPath == null){ return "";}
+            string filePath = Path.Combine(locationPath, "TargetPlace.csv");
+            List<string[]> targetPlace = File.ReadTargetPlace(filePath, 1);
+            Dictionary<string, Dictionary<string, string>> map = MakeIncentiveMap(targetPlace);
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine(DateTime.Now.AddDays(1).ToString("MM/dd") + "のインセンティブ情報");
+            stringBuilder.AppendLine();
+            foreach (var (address, incentive) in map)
             {
-                List<string> options = new()
+                stringBuilder.AppendLine(address);
+                foreach (var (time, magnification) in incentive)
                 {
-                    "--headless",
-                    "--incognito",
-                    "--start-maximized",
-                    "--blink-settings=imagesEnabled=false",
-                    "--lang=ja",
-                    "--proxy-server='direct://'",
-                    "--proxy-bypass-list=*",
-                    "--proxy-bypass-list=*"
-                };
-                Dictionary<string, Dictionary<string, string>> map = new();
-                using (WebDriverOpration webDriver = new(options.ToArray()))
-                {
-                    string filePath = Path.Combine(locationPath, "TargetPlace.csv");
-                    List<string[]> targetPlace = File.ReadTargetPlace(filePath);
-                    
-                    foreach (string[] address in targetPlace)
+                    //1.1倍以上の時間帯だけ抽出する
+                    if (double.TryParse(magnification, out double val) && val > 1.0)
                     {
-                        map.Add(address[1]+address[2],webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
+                        stringBuilder.AppendLine($"{time}:{val.ToString()}");
                     }
                 }
-                StringBuilder stringBuilder = new();
                 stringBuilder.AppendLine();
-                stringBuilder.AppendLine(DateTime.Now.AddDays(1).ToString("MM/dd") + "のインセンティブ情報");
-                stringBuilder.AppendLine();
-                foreach (var(address, incentive) in map)
-                {
-                    stringBuilder.AppendLine(address);
-                    foreach(var(time, magnification) in incentive)
-                    {
-                        stringBuilder.AppendLine($"{time}:{magnification}");
-                    }
-                    stringBuilder.AppendLine();
-                }
-                return stringBuilder.ToString();    
             }
-            return "";
+            return stringBuilder.ToString();
+        }
+
+        /// <summary>
+        ///  csvファイル記載地域の明日のインセンティブ情報を取得してMap化する
+        /// </summary>
+        /// <param name="targetPlace"> csvファイル記載地域</param>
+        /// <returns>csvファイル記載地域すべてのインセンティブ情報</returns>
+        private static Dictionary<string, Dictionary<string, string>> MakeIncentiveMap(List<string[]> targetPlace)
+        {
+            var options = new List<string>()
+            {
+                "--headless",
+                "--incognito",
+                "--start-maximized",
+                "--blink-settings=imagesEnabled=false",
+                "--lang=ja",
+                "--proxy-server='direct://'",
+                "--proxy-bypass-list=*"
+            };
+            var map = new Dictionary<string, Dictionary<string, string>>();
+            using (var webDriver = new WebDriverOpration(options.ToArray()))
+            {
+                foreach (string[] address in targetPlace)
+                {
+                    map.Add(address[1] + address[2], webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
+                }
+            }
+            return map;
         }
     }
 }
