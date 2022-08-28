@@ -62,7 +62,7 @@ namespace IncentiveCheckerforDemaekan
                     //1.1倍以上の時間帯だけ抽出する
                     if (double.TryParse(magnification, out double val) && val > 1.0)
                     {
-                        stringBuilder.AppendLine($"{time}:{magnification}");
+                        stringBuilder.AppendLine($"{time}:{val.ToString()}");
                     }
                 }
                 stringBuilder.AppendLine();
