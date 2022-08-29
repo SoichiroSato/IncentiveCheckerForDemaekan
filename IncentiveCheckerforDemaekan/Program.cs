@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace IncentiveCheckerforDemaekan
 {
@@ -17,10 +18,12 @@ namespace IncentiveCheckerforDemaekan
             int resCode;
             try
             {
-                message = MakeSendMessage();
+                string locationPath = GetCurrentPath();
+                CheckBrowser(locationPath);
+                message = MakeSendMessage(locationPath);
                 resCode = 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 message = ex.Message;
                 resCode = 1;
@@ -38,15 +41,45 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
+        /// Chromeがインストールされているか確認しなかったらインストールする
+        /// </summary>
+        /// <param name="locationPath"></param>
+        private static void CheckBrowser(string locationPath)
+        {
+            var browsers = Browser.GetInstallBrowser();
+            if (!browsers.Contains("Google Chrome"))
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    Browser.InstallChromeWindows(Path.Combine(locationPath, "ChromeInstall.bat"));
+                }
+            }
+        }
+
+        /// <summary>
+        /// 実行ファイルのカレントディレクトリを取得する
+        /// </summary>
+        /// <returns>カレントディレクトリ</returns>
+        private static string GetCurrentPath()
+        {
+            var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            if (locationPath == null) 
+            { 
+                return ""; 
+            }else
+            {
+                return locationPath;
+            }
+        }
+
+        /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
         /// csvファイル記載地域の明日のインセンティブ情報を取得して
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        private static string MakeSendMessage()
+        private static string MakeSendMessage(string locationPath)
         {
-            var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (locationPath == null){ return "";}
             string filePath = Path.Combine(locationPath, "TargetPlace.csv");
             List<string[]> targetPlace = File.ReadTargetPlace(filePath, 1);
             Dictionary<string, Dictionary<string, string>> map = MakeIncentiveMap(targetPlace);
@@ -87,13 +120,11 @@ namespace IncentiveCheckerforDemaekan
                 "--proxy-server='direct://'",
                 "--proxy-bypass-list=*"
             };
+            using var webDriver = new WebDriverOpration(options.ToArray());
             var map = new Dictionary<string, Dictionary<string, string>>();
-            using (var webDriver = new WebDriverOpration(options.ToArray()))
+            foreach (string[] address in targetPlace)
             {
-                foreach (string[] address in targetPlace)
-                {
-                    map.Add(address[1] + address[2], webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
-                }
+                map.Add(address[1] + address[2], webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
             }
             return map;
         }
