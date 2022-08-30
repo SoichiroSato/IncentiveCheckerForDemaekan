@@ -19,6 +19,7 @@ namespace IncentiveCheckerforDemaekan
             try
             {
                 string locationPath = GetCurrentPath();
+                ExitsFile(locationPath);
                 CheckBrowser(locationPath);
                 message = MakeSendMessage(locationPath);
                 resCode = 0;
@@ -38,6 +39,23 @@ namespace IncentiveCheckerforDemaekan
                 catch { resCode = 1; }
             }
             return resCode;
+        }
+
+        /// <summary>
+        /// 必要なファイルがあるか確認してなかったらファイルを作る
+        /// </summary>
+        /// <param name="locationPath">カレントディレクトリ</param>
+        private static void ExitsFile(string locationPath)
+        {
+            var fileOprate = new FileOparate(locationPath);
+            if (!File.Exists(Path.Combine(locationPath, "ChromeInstall.bat")))
+            {
+                fileOprate.WriteFile("ChromeInstall.bat", FileContents.ChromeInstall());
+            }
+            if (!File.Exists(Path.Combine(locationPath, "TargetPlace.csv")))
+            {
+                fileOprate.WriteFile("TargetPlace.csv", FileContents.TargetPlace());
+            }
         }
 
         /// <summary>
@@ -80,8 +98,8 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>Line通知メッセージ</returns>
         private static string MakeSendMessage(string locationPath)
         {
-            string filePath = Path.Combine(locationPath, "TargetPlace.csv");
-            List<string[]> targetPlace = File.ReadTargetPlace(filePath, 1);
+            var fileOparate = new FileOparate(locationPath);
+            List<string[]> targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv", 1);
             Dictionary<string, Dictionary<string, string>> map = MakeIncentiveMap(targetPlace);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
