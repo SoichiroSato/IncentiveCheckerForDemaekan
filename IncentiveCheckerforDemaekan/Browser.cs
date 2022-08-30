@@ -41,11 +41,11 @@ namespace IncentiveCheckerforDemaekan
         /// <summary>
         /// WindowsOSでChoromeをインストールする
         /// </summary>
-        /// <param name="filePath"></param>
+        /// <param name="filePath">実行ファイルのフルパス</param>
         public static void InstallChromeWindows(string filePath)
         {
-            using var file = new File();
-            file.ExcuteFile("/c " + filePath, false, false, true);
+            using var cmd = new Cmd();
+            cmd.ExcuteFile("/c " + filePath, false, false, true);
         }
     }
 }
