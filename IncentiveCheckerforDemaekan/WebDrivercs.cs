@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Support.UI;
 using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
@@ -22,7 +23,7 @@ namespace IncentiveCheckerforDemaekan
         /// WebDriverManagerを使ってWebDriverを設定する
         /// </summary>
         /// <param name="options">choromeオプションに設定する文字列配列</param>
-        public WebDriver(string[]? options = null)
+        public WebDriver(string[]? options = null,double wait = 0)
         {
             var chromeConfig = new ChromeConfig();
             new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
@@ -39,6 +40,11 @@ namespace IncentiveCheckerforDemaekan
                 chromeOptions.AddArguments(options);
                 Driver = new ChromeDriver(DriverService, chromeOptions);
             }
+            if(wait != 0)
+            {
+                Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
+            } 
+           
         }
 
         /// <summary>

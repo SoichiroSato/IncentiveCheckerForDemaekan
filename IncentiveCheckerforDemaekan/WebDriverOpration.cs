@@ -12,7 +12,7 @@ namespace IncentiveCheckerforDemaekan
         /// コンストラクタ
         /// </summary>
         /// <param name="options">choromeオプションに設定する文字列配列</param>
-        public WebDriverOpration(string[]? options = null) :base(options){}
+        public WebDriverOpration(string[]? options = null, double wait = 0) :base(options, wait) {}
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから明日のインセンティブ情報を取得する
