@@ -15,16 +15,21 @@ namespace IncentiveCheckerforDemaekan
         public Process? Process { get; set; }
 
         /// <summary>
-        /// コマンドで外部プロセスを起動する
+        /// プロセスインフォ
+        /// </summary>
+        public ProcessStartInfo ProcessStartInfo { get; set; }
+
+        /// <summary>
+        /// コンストラクタ
         /// </summary>
         /// <param name="arguments">実行ファイルのコマンド</param>
         /// <param name="redirectStandardInput">入力書き込み</param>
         /// <param name="redirectStandardOutput">出力読み取り</param>
         /// <param name="useShellExecute">管理者権限</param>
         /// <param name="createNoWindow">ウィンドウ表示</param>
-        public void ExcuteFile(string arguments, bool redirectStandardInput = false, bool redirectStandardOutput = true, bool useShellExecute = false, bool createNoWindow = true)
+        public Cmd(string arguments, bool redirectStandardInput = false, bool redirectStandardOutput = true, bool useShellExecute = false, bool createNoWindow = true)
         {
-            var ProcessStartInfo = new ProcessStartInfo
+            ProcessStartInfo = new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("ComSpec"),
                 Arguments = arguments,
@@ -38,6 +43,14 @@ namespace IncentiveCheckerforDemaekan
                 //管理者権限で実行するときのおまじない
                 ProcessStartInfo.Verb = "runas";
             }
+        }
+
+        /// <summary>
+        /// コマンドで外部プロセスを起動する
+        /// </summary>
+       
+        public void ExcuteFile()
+        {
             Process = Process.Start(ProcessStartInfo);
             if (Process != null)
             {

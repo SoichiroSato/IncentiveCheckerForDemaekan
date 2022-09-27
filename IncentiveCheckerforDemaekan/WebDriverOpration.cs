@@ -26,10 +26,9 @@ namespace IncentiveCheckerforDemaekan
             Driver.Navigate().GoToUrl("https://cdn.demae-can.com/contents/driver/boost/area/index.html");
             Driver.ExecuteScript("const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;");
             Driver.FindElement(By.Id("datepicker")).Clear();
-            Driver.FindElement(By.Id("datepicker")).SendKeys(DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"));
+            Driver.FindElement(By.Id("datepicker")).SendKeys(DateTime.Now.ToString("yyyy-MM-dd"));
             new SelectElement(Driver.FindElement(By.Id("area"))).SelectByText(area);
             new SelectElement(Driver.FindElement(By.Id("prefecture"))).SelectByText(prefecture);
-            new SelectElement(Driver.FindElement(By.Id("city"))).SelectByText(city);
             var table = Driver.FindElement(By.Id("resultmap"));
             var thead = table.FindElement(By.Id("resulthead"));
             var columns = thead.FindElements(By.TagName("th"));

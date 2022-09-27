@@ -18,11 +18,7 @@ namespace IncentiveCheckerforDemaekan
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
-                if (browserKeys == null)
-                {
-                    // 上記のキーでレジストリが開けない場合はHKEY_LOCAL_MACHINE\SOFTWARE\Clients\StartMenuInternetを開く
-                    browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-                }
+                browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
                 if((browserKeys == null)) { return browsers; }
                 var subKeyNames = browserKeys.GetSubKeyNames();
                 foreach (var browser in subKeyNames)
@@ -44,8 +40,8 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="filePath">実行ファイルのフルパス</param>
         public static void InstallChromeWindows(string filePath)
         {
-            using var cmd = new Cmd();
-            cmd.ExcuteFile("/c " + filePath, false, false, true);
+            using var cmd = new Cmd("/c " + filePath, false, false, true);
+            cmd.ExcuteFile();
         }
     }
 }
