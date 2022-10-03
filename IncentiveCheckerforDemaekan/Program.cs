@@ -103,7 +103,7 @@ namespace IncentiveCheckerforDemaekan
             Dictionary<string, Dictionary<string, string>> map = MakeIncentiveMap(targetPlace);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine(DateTime.Now.AddDays(1).ToString("MM/dd") + "のインセンティブ情報");
+            stringBuilder.AppendLine(DateTime.Now.ToString("MM/dd") + "のインセンティブ情報");
             stringBuilder.AppendLine();
             foreach (var (address, incentive) in map)
             {
@@ -138,7 +138,7 @@ namespace IncentiveCheckerforDemaekan
                 "--proxy-server='direct://'",
                 "--proxy-bypass-list=*"
             };
-            using var webDriver = new WebDriverOpration(options.ToArray());
+            using var webDriver = new WebDriverOpration(options.ToArray(),10);
             var map = new Dictionary<string, Dictionary<string, string>>();
             foreach (string[] address in targetPlace)
             {

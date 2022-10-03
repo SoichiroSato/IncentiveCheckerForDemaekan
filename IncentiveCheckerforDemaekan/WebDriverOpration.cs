@@ -12,7 +12,7 @@ namespace IncentiveCheckerforDemaekan
         /// コンストラクタ
         /// </summary>
         /// <param name="options">choromeオプションに設定する文字列配列</param>
-        public WebDriverOpration(string[]? options = null) :base(options){}
+        public WebDriverOpration(string[]? options = null, double wait = 0) :base(options, wait) {}
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから明日のインセンティブ情報を取得する
@@ -26,10 +26,9 @@ namespace IncentiveCheckerforDemaekan
             Driver.Navigate().GoToUrl("https://cdn.demae-can.com/contents/driver/boost/area/index.html");
             Driver.ExecuteScript("const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;");
             Driver.FindElement(By.Id("datepicker")).Clear();
-            Driver.FindElement(By.Id("datepicker")).SendKeys(DateTime.Now.AddDays(1).ToString("yyyy-MM-dd"));
+            Driver.FindElement(By.Id("datepicker")).SendKeys(DateTime.Now.ToString("yyyy-MM-dd"));
             new SelectElement(Driver.FindElement(By.Id("area"))).SelectByText(area);
             new SelectElement(Driver.FindElement(By.Id("prefecture"))).SelectByText(prefecture);
-            new SelectElement(Driver.FindElement(By.Id("city"))).SelectByText(city);
             var table = Driver.FindElement(By.Id("resultmap"));
             var thead = table.FindElement(By.Id("resulthead"));
             var columns = thead.FindElements(By.TagName("th"));
