@@ -11,14 +11,19 @@
 しかし参照するエリアはわずか数エリアであり、参照したいエリアが都道府県をまたぐ場合は都度画面操作が必要です。<br/>
 そこで自分の必要なエリアのインセンティブ情報のみを日常生活で必要不可欠となっているLine通知することで情報取得を簡易化し、その日の配達戦略考案に貢献するツールを作りました。<br/>
 
+<img src="https://user-images.githubusercontent.com/36285803/196443688-81bab726-e818-4e93-9d55-631289947da6.png" width="300px">
 
 ## 使用技術
 
-■ バックエンドエンド<br>
+■ 言語・FW<br>
 
 -   .Net 6.0
 -   C#
--   Seleium  
+-   Bat
+
+■ ライブラリ<br>
+
+-   Selenium
 
 ■ その他<br>
 
@@ -26,8 +31,39 @@
 -   SourceTree
 -   LineNotify
 -   GoogleChrome
+-   PlantUml
 
-## 利用方法
+## クラス図
+![image](https://user-images.githubusercontent.com/36285803/196440166-82d3fef4-a88f-4f49-843f-6d5ad97492d4.png)
 
-1.本コードをクローンするか、zipとしてダウンロードし解凍します。
-2.
+## 利用準備 (本プロジェクトのビルド、ファイルの設定）
+
+1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。
+2. 本プロジェクトをビルドします。
+3. ビルドしてできた「TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
+
+<img src="https://user-images.githubusercontent.com/36285803/196426396-c082219a-cb8c-4936-a4c9-c11bb39a526c.png" width="800px">
+
+## 利用準備 (LINE）
+1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
+2. 右上にある自分の名前 > マイページ をクリックします。
+3. アクセストークンの発行(開発者向け)」 > 「トークンを発行する」をクリックします。
+4. 「トークンを発行する」クリックすると、どのグループへ通知するかの選択画面が表示されるので任意のグループを選択してアクセストークンを発行します。 ※発行されたアクセストークンはメモ帳等に保存してください。
+5. Line Notifyを選択したグループに招待します。
+
+## 利用準備 (GoogleChromeの準備）※Windows以外
+本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
+※Windowsの場合はGoogleChromeがインストールされてない場合は本ツールを管理者権限で実行した場合自動でインストールします。
+
+## 実行方法(Windows)
+
+    IncentiveCheckerforDemaekan.exe [取得したLineアクセストークン]
+    
+## タスクスケジューラーへの登録例(Windows)
+
+<img src="https://user-images.githubusercontent.com/36285803/196444072-e66561c1-3a5c-4283-b716-6a585de4214e.png" width="300px">
+<img src="https://user-images.githubusercontent.com/36285803/196453824-31f7c7eb-da2b-42f6-a0ee-c43592991a90.png" width="300px">
+<img src="https://user-images.githubusercontent.com/36285803/196449854-e6be6ccf-18be-4c35-933d-b4cac32a99c4.png" width="300px">
+<img src="https://user-images.githubusercontent.com/36285803/196449993-050cc5c9-9e0c-4a35-abb5-db230a93dc17.png" width="300px">
+
+
