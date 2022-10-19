@@ -34,8 +34,8 @@
 -   PlantUml
 
 ## クラス図
-![image](https://user-images.githubusercontent.com/36285803/196440166-82d3fef4-a88f-4f49-843f-6d5ad97492d4.png)
 
+![image](https://user-images.githubusercontent.com/36285803/196669936-92c7d521-06c5-42a5-ba97-b62092823de3.png)
 ## 利用準備 (本プロジェクトのビルド、ファイルの設定）
 
 1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。

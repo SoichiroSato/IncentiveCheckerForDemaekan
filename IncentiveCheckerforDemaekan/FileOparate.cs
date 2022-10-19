@@ -57,10 +57,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="encoding">エンコードタイプ</param>
         public void WriteFile(string file, string contents,bool append = false, Encoding? encoding = null)
         {
-            if (encoding is null)
-            {
-                encoding = Encoding.UTF8;
-            }
+            encoding ??= Encoding.UTF8;
             using var streamWriter = new StreamWriter(Path.Combine(LocationPath, file),append, encoding);
             streamWriter.Write(contents);
         }
