@@ -35,7 +35,7 @@
 
 ## クラス図
 
-![image](https://user-images.githubusercontent.com/36285803/196669936-92c7d521-06c5-42a5-ba97-b62092823de3.png)
+![image](https://user-images.githubusercontent.com/36285803/197114823-256382ac-4d5c-4672-956e-25f687df8453.png)
 ## 利用準備 (本プロジェクトのビルド、ファイルの設定）
 
 1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。
