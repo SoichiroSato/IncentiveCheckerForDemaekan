@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Data;
 
 namespace IncentiveCheckerforDemaekan
 {
@@ -12,7 +13,7 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知を行なう
         /// </summary>
         /// <param name="args">Lineアクセストークン</param>
-        static int Main(string[] args)
+        static async Task<int> Main(string[] args)
         {
             string message;
             int resCode;
@@ -21,7 +22,7 @@ namespace IncentiveCheckerforDemaekan
                 string locationPath = GetCurrentPath();
                 ExitsFile(locationPath);
                 CheckBrowser(locationPath);
-                message = MakeSendMessage(locationPath);
+                message = await MakeSendMessageAsync(locationPath);
                 resCode = 0;
             }
             catch (Exception ex)
@@ -32,9 +33,8 @@ namespace IncentiveCheckerforDemaekan
             if(args.Length > 0 )
             {
                 try 
-                { 
-                    Task task = new Line(args[0]).SendMessage(message);
-                    task.Wait();
+                {
+                    await new Line(args[0]).SendMessage(message);           
                 }
                 catch { resCode = 1; }
             }
@@ -96,11 +96,11 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        private static string MakeSendMessage(string locationPath)
+        private static async Task<string> MakeSendMessageAsync(string locationPath)
         {
             var fileOparate = new FileOparate(locationPath);
-            List<string[]> targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv", 1);
-            Dictionary<string, Dictionary<string, string>> map = MakeIncentiveMap(targetPlace);
+            DataTable targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
+            Dictionary<string, Dictionary<string, string>> map = await MakeIncentiveMapAsync(targetPlace);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(DateTime.Now.ToString("MM/dd") + "のインセンティブ情報");
@@ -126,7 +126,31 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="targetPlace"> csvファイル記載地域</param>
         /// <returns>csvファイル記載地域すべてのインセンティブ情報</returns>
-        private static Dictionary<string, Dictionary<string, string>> MakeIncentiveMap(List<string[]> targetPlace)
+        private static async Task<Dictionary<string, Dictionary<string, string>>> MakeIncentiveMapAsync(DataTable targetPlace)
+        {
+            
+            var map = new Dictionary<string, Dictionary<string, string>>();
+            using var reader = targetPlace.CreateDataReader();
+            var tasks = new List<Task>();
+            while (reader.Read())
+            {
+                var area = (string)reader["エリア"];
+                var prefecture = (string)reader["都道府県"];
+                var city = (string)reader["市区町村"];
+                tasks.Add(Task.Run(() => AddMapOfIncentive(map, area, prefecture, city)));
+            }
+            await Task.WhenAll(tasks);  
+            return map;
+        }
+
+        /// <summary>
+        /// 各エリアのインセンティブ情報を取得してMapに追加する
+        /// </summary>
+        /// <param name="map">格納Map</param>
+        /// <param name="area">エリア</param>
+        /// <param name="prefecture">都道府県</param>
+        /// <param name="city">市区町村</param>
+        private static void AddMapOfIncentive(Dictionary<string, Dictionary<string, string>> map, string area, string prefecture, string city)
         {
             var options = new List<string>()
             {
@@ -138,13 +162,8 @@ namespace IncentiveCheckerforDemaekan
                 "--proxy-server='direct://'",
                 "--proxy-bypass-list=*"
             };
-            using var webDriver = new WebDriverOpration(options.ToArray(),10);
-            var map = new Dictionary<string, Dictionary<string, string>>();
-            foreach (string[] address in targetPlace)
-            {
-                map.Add(address[1] + address[2], webDriver.GetInsentiveInfo(address[0], address[1], address[2]));
-            }
-            return map;
+            using var webDriver = new WebDriverOpration(options.ToArray(), 10);
+            map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.FileIO;
+using System.Data;
 using System.Text;
 
 namespace IncentiveCheckerforDemaekan
@@ -28,21 +29,29 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="file">ファイルのフルパス</param>
         /// <param name="index">読み取りスタート行のインデックス</param>
         /// <returns>ファイルの中身</returns>
-        public List<string[]> ReadTargetPlace(string file,int index = 0)
+        public DataTable ReadTargetPlace(string file)
         {
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
-            var ret = new List<string[]>();
+            var ret = new DataTable();
             txtParser.SetDelimiters(",");
-            for(int i = 0; i < index; i++)
-            {
-                txtParser.ReadFields();
+            string[]? columns = txtParser.ReadFields();
+            if (columns != null) { 
+                foreach(var column in columns)
+                {
+                    ret.Columns.Add(column);
+                }
             }
             while (!txtParser.EndOfData)
             {
-                string[]? value = txtParser.ReadFields();
-                if (value != null)
+                string[]? values = txtParser.ReadFields();
+                if (values != null)
                 {
-                    ret.Add(value);
+                    var row = ret.NewRow();
+                    for(int i = 0; i < values.Length; i++)
+                    {
+                        row[i] = values[i];
+                    }
+                    ret.Rows.Add(row);
                 }
             }
             return ret;
