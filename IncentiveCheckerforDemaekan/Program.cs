@@ -17,10 +17,10 @@ namespace IncentiveCheckerforDemaekan
         {
             string message;
             int resCode;
+            string locationPath = GetCurrentPath();
             try
             {
-                string locationPath = GetCurrentPath();
-                ExitsFile(locationPath);
+                await ExitsFileAsync(locationPath);
                 CheckBrowser(locationPath);
                 message = await MakeSendMessageAsync(locationPath);
                 resCode = 0;
@@ -32,12 +32,32 @@ namespace IncentiveCheckerforDemaekan
             }
             if(args.Length > 0 )
             {
-                try 
-                {
-                    await new Line(args[0]).SendMessage(message);           
-                }
-                catch { resCode = 1; }
+                resCode = await SendLine(args[0], message, resCode);
             }
+            else if(File.Exists(Path.Combine(locationPath, "LineToken.txt")))
+            {
+                var accessToken = new FileOparate(locationPath).ReadTxt("LineToken.txt");
+                resCode = await SendLine(accessToken, message, resCode);
+
+            }
+            return resCode;
+        }
+
+        /// <summary>
+        /// Lineに結果を通知してレスポンスコードを返す
+        /// </summary>
+        /// <param name="accessToken">Lineアクセストークン</param>
+        /// <param name="message">通知メッセージ</param>
+        /// <param name="resCode">レスポンスコード</param>
+        /// <returns></returns>
+        private static async Task<int> SendLine(string accessToken, string message, int resCode)
+        {
+            try
+            {
+                await new Line(accessToken).SendMessage(message);
+            }
+            catch { resCode = 1; }
+
             return resCode;
         }
 
@@ -45,17 +65,34 @@ namespace IncentiveCheckerforDemaekan
         /// 必要なファイルがあるか確認してなかったらファイルを作る
         /// </summary>
         /// <param name="locationPath">カレントディレクトリ</param>
-        private static void ExitsFile(string locationPath)
+        private static async Task ExitsFileAsync(string locationPath)
         {
             var fileOprate = new FileOparate(locationPath);
-            if (!File.Exists(Path.Combine(locationPath, "ChromeInstall.bat")))
+            var tasks = new List<Task>
             {
-                fileOprate.WriteFile("ChromeInstall.bat", FileContents.ChromeInstall());
-            }
-            if (!File.Exists(Path.Combine(locationPath, "TargetPlace.csv")))
-            {
-                fileOprate.WriteFile("TargetPlace.csv", FileContents.TargetPlace());
-            }
+                Task.Run(() =>
+                {
+                    if (!File.Exists(Path.Combine(locationPath, "ChromeInstall.bat")))
+                    {
+                        fileOprate.WriteFile("ChromeInstall.bat", FileContents.ChromeInstall());
+                    }
+                }),
+                Task.Run(() =>
+                {
+                    if (!File.Exists(Path.Combine(locationPath, "TargetPlace.csv")))
+                    {
+                        fileOprate.WriteFile("TargetPlace.csv", FileContents.TargetPlace());
+                    }
+                }),
+                Task.Run(() =>
+                {
+                    if (!File.Exists(Path.Combine(locationPath, "LineToken.txt")))
+                    {
+                        fileOprate.WriteFile("LineToken.txt", "");
+                    }
+                })
+            };
+            await Task.WhenAll(tasks);
         }
 
         /// <summary>
@@ -100,10 +137,11 @@ namespace IncentiveCheckerforDemaekan
         {
             var fileOparate = new FileOparate(locationPath);
             DataTable targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
-            Dictionary<string, Dictionary<string, string>> map = await MakeIncentiveMapAsync(targetPlace);
+            DateTime targetDate = DateTime.Now.AddDays(1);
+            Dictionary<string, Dictionary<string, string>> map = await MakeIncentiveMapAsync(targetPlace,targetDate);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
-            stringBuilder.AppendLine(DateTime.Now.ToString("MM/dd") + "のインセンティブ情報");
+            stringBuilder.AppendLine(targetDate.ToString("MM/dd") + "のインセンティブ情報");
             stringBuilder.AppendLine();
             foreach (var (address, incentive) in map)
             {
@@ -126,7 +164,7 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="targetPlace"> csvファイル記載地域</param>
         /// <returns>csvファイル記載地域すべてのインセンティブ情報</returns>
-        private static async Task<Dictionary<string, Dictionary<string, string>>> MakeIncentiveMapAsync(DataTable targetPlace)
+        private static async Task<Dictionary<string, Dictionary<string, string>>> MakeIncentiveMapAsync(DataTable targetPlace, DateTime targetDate)
         {
             
             var map = new Dictionary<string, Dictionary<string, string>>();
@@ -137,7 +175,7 @@ namespace IncentiveCheckerforDemaekan
                 var area = (string)reader["エリア"];
                 var prefecture = (string)reader["都道府県"];
                 var city = (string)reader["市区町村"];
-                tasks.Add(Task.Run(() => AddMapOfIncentive(map, area, prefecture, city)));
+                tasks.Add(Task.Run(() => AddMapOfIncentive(map, area, prefecture, city, targetDate)));
             }
             await Task.WhenAll(tasks);  
             return map;
@@ -150,7 +188,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="area">エリア</param>
         /// <param name="prefecture">都道府県</param>
         /// <param name="city">市区町村</param>
-        private static void AddMapOfIncentive(Dictionary<string, Dictionary<string, string>> map, string area, string prefecture, string city)
+        private static void AddMapOfIncentive(Dictionary<string, Dictionary<string, string>> map, string area, string prefecture, string city, DateTime targetDate)
         {
             var options = new List<string>()
             {
@@ -163,7 +201,7 @@ namespace IncentiveCheckerforDemaekan
                 "--proxy-bypass-list=*"
             };
             using var webDriver = new WebDriverOpration(options.ToArray(), 10);
-            map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city));
+            map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city, targetDate));
         }
     }
 }
