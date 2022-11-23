@@ -193,6 +193,7 @@ namespace IncentiveCheckerforDemaekan
             var options = new List<string>()
             {
                 "--headless",
+                "--no-sandbox",
                 "--incognito",
                 "--start-maximized",
                 "--blink-settings=imagesEnabled=false",
