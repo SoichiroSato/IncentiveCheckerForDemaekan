@@ -21,12 +21,12 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="prefecture">都道府県</param>
         /// <param name="city">市区町村</param>
         /// <returns>インセンティブ情報</returns>
-        public Dictionary<string,string> GetInsentiveInfo(string area,string prefecture,string city)
+        public Dictionary<string,string> GetInsentiveInfo(string area,string prefecture,string city, DateTime targetDate)
         {
             Driver.Navigate().GoToUrl("https://cdn.demae-can.com/contents/driver/boost/area/index.html");
             Driver.ExecuteScript("const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;");
             Driver.FindElement(By.Id("datepicker")).Clear();
-            Driver.FindElement(By.Id("datepicker")).SendKeys(DateTime.Now.ToString("yyyy-MM-dd"));
+            Driver.FindElement(By.Id("datepicker")).SendKeys(targetDate.ToString("yyyy-MM-dd"));
             new SelectElement(Driver.FindElement(By.Id("area"))).SelectByText(area);
             new SelectElement(Driver.FindElement(By.Id("prefecture"))).SelectByText(prefecture);
             var table = Driver.FindElement(By.Id("resultmap"));

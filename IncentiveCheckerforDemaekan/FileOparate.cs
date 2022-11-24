@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualBasic.FileIO;
+using System.Data;
 using System.Text;
 
 namespace IncentiveCheckerforDemaekan
@@ -26,26 +27,47 @@ namespace IncentiveCheckerforDemaekan
         /// csvファイルを読み取る
         /// </summary>
         /// <param name="file">ファイルのフルパス</param>
-        /// <param name="index">読み取りスタート行のインデックス</param>
         /// <returns>ファイルの中身</returns>
-        public List<string[]> ReadTargetPlace(string file,int index = 0)
+        public DataTable ReadTargetPlace(string file)
         {
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
-            var ret = new List<string[]>();
+            var ret = new DataTable();
             txtParser.SetDelimiters(",");
-            for(int i = 0; i < index; i++)
+            string[]? columns = txtParser.ReadFields();
+            if (columns != null)
             {
-                txtParser.ReadFields();
+                foreach (var column in columns)
+                {
+                    ret.Columns.Add(column);
+                }
             }
             while (!txtParser.EndOfData)
             {
-                string[]? value = txtParser.ReadFields();
-                if (value != null)
+                string[]? values = txtParser.ReadFields();
+                if (values != null)
                 {
-                    ret.Add(value);
+                    var row = ret.NewRow();
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        row[i] = values[i];
+                    }
+                    ret.Rows.Add(row);
                 }
             }
             return ret;
+        }
+
+        /// <summary>
+        /// txtファイルを読み込んで記載内容を返す
+        /// </summary>
+        /// <param name="file">ファイルのフルパス</param>
+        /// <param name="encoding">エンコードタイプ</param>
+        /// <returns>記載内容</returns>
+        public string ReadTxt(string file, Encoding? encoding = null)
+        {
+            encoding ??= Encoding.UTF8;
+            using var reader = new StreamReader(Path.Combine(LocationPath, file), encoding);
+            return reader.ReadToEnd();
         }
 
         /// <summary>
