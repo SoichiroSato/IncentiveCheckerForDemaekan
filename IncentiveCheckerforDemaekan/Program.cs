@@ -25,11 +25,11 @@ namespace IncentiveCheckerforDemaekan
             {
                 if (AsyncFlg)
                 {
-                    CreateFiles(locationPath);
+                    await CreateFilesAsync(locationPath); 
                 }
                 else
                 {
-                    await CreateFilesAsync(locationPath);
+                    CreateFiles(locationPath);
                 }
 
                 CheckBrowser(locationPath);
@@ -175,7 +175,7 @@ namespace IncentiveCheckerforDemaekan
             var fileOparate = new FileOparate(locationPath);
             var targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
-            var map = AsyncFlg ? MakeIncentiveMap(targetPlace, targetDate) : await MakeIncentiveMapAsync(targetPlace, targetDate);
+            var map = AsyncFlg ? await MakeIncentiveMapAsync(targetPlace, targetDate) : MakeIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(targetDate.ToString("MM/dd") + "のインセンティブ情報");
