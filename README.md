@@ -36,13 +36,6 @@
 ## クラス図
 
 ![image](https://user-images.githubusercontent.com/36285803/197114823-256382ac-4d5c-4672-956e-25f687df8453.png)
-## 利用準備 (本プロジェクトのビルド、ファイルの設定）
-
-1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。
-2. 本プロジェクトをビルドします。
-3. ビルドしてできた「TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
-
-<img src="https://user-images.githubusercontent.com/36285803/196426396-c082219a-cb8c-4936-a4c9-c11bb39a526c.png" width="800px">
 
 ## 利用準備 (LINE）
 1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
@@ -51,14 +44,41 @@
 4. 「トークンを発行する」クリックすると、どのグループへ通知するかの選択画面が表示されるので任意のグループを選択してアクセストークンを発行します。 ※発行されたアクセストークンはメモ帳等に保存してください。
 5. Line Notifyを選択したグループに招待します。
 
+## 利用準備 (本プロジェクトのビルド、ファイルの設定）
+
+1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。
+2. 本プロジェクトをビルドします。
+3. ビルドしてできた「TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
+
+<img src="https://user-images.githubusercontent.com/36285803/196426396-c082219a-cb8c-4936-a4c9-c11bb39a526c.png" width="800px">
+
+4. コマンドライン引数を利用しない場合はビルドしてできた「LineToken.txt」に取得したLineアクセストークンを入力します。
+
 ## 利用準備 (GoogleChromeの準備）※Windows以外
 本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
 ※Windowsの場合はGoogleChromeがインストールされてない場合は本ツールを管理者権限で実行した場合自動でインストールします。
 
 ## 実行方法(Windows)
-
+1. LineToken.txtに取得したLineアクセストークンを入力していない場合
+```
     IncentiveCheckerforDemaekan.exe [取得したLineアクセストークン]
-    
+```
+2. LineToken.txtに取得したLineアクセストークンを入力している場合
+```
+    IncentiveCheckerforDemaekan.exe 
+```
+
+## 実行方法(Linux)
+※事前に.net6 .net SDK .net runtimeなどをインストールしておいてください。
+
+1. LineToken.txtに取得したLineアクセストークンを入力していない場合
+```
+    dotnet IncentiveCheckerforDemaekan.dll [取得したLineアクセストークン]
+```    
+2. LineToken.txtに取得したLineアクセストークンを入力している場合
+```
+    dotnet IncentiveCheckerforDemaekan.dll
+``` 
 ## タスクスケジューラーへの登録例(Windows)
 
 <img src="https://user-images.githubusercontent.com/36285803/196444072-e66561c1-3a5c-4283-b716-6a585de4214e.png" width="300px">
@@ -66,4 +86,12 @@
 <img src="https://user-images.githubusercontent.com/36285803/196449854-e6be6ccf-18be-4c35-933d-b4cac32a99c4.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196449993-050cc5c9-9e0c-4a35-abb5-db230a93dc17.png" width="300px">
 
+## タスクスケジューラーへの登録例(Linux)
+```
+    crontab -e
+```
 
+```
+    CRON_TZ="Japan"
+    [mm] [hh] * * * cd [homeディレクトリからの格納ディレクトリ]; dotnet IncentiveCheckerforDemaekan.dll 
+```
