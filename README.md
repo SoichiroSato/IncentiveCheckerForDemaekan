@@ -54,6 +54,25 @@
 
 4. コマンドライン引数を利用しない場合はビルドしてできた「LineToken.txt」に取得したLineアクセストークンを入力します。
 
+## 利用準備 (処理設定）
+本ツールは一部非同期通信処理を実装しております。<br/>
+非同期通信で処理を行う場合は実行速度向上が見込めます。<br/>
+ただし実行PCやサーバのスペックによっては処理負荷が向上するためエラーが発生する場合もございます。<br/>
+その場合は同期通信での実行をお願いします。<br/>
+設定方法はApp.config（IncentiveCheckerforDemaekan.dll.config)の以下の設定を行ってください。<br/>
+デフォルトは同期通信です。<br/>
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<appSettings>
+		<!--falseかtrueを入力してください。
+		false:同期通信、true非同期通信-->
+		<add key ="async" value="false"/>
+	</appSettings>
+</configuration>
+```
+
+
 ## 利用準備 (GoogleChromeの準備）※Windows以外
 本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
 ※Windowsの場合はGoogleChromeがインストールされてない場合は本ツールを管理者権限で実行した場合自動でインストールします。
