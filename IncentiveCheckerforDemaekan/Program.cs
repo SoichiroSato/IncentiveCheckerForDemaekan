@@ -35,7 +35,7 @@ namespace IncentiveCheckerforDemaekan
                 }
 
                 CheckBrowser(locationPath);
-                message = await MakeSendMessageAsync(locationPath);
+                message = await CreateSendMessageAsync(locationPath);
                 resCode = 0;
             }
             catch (Exception ex)
@@ -158,12 +158,12 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        private static async Task<string> MakeSendMessageAsync(string locationPath)
+        private static async Task<string> CreateSendMessageAsync(string locationPath)
         {
             var fileOparate = new FileOparate(locationPath);
             var targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
-            var map = AsyncFlg ? await MakeIncentiveMapAsync(targetPlace, targetDate) : MakeIncentiveMap(targetPlace, targetDate);
+            var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(targetDate.ToString("MM/dd") + "のインセンティブ情報");
@@ -191,7 +191,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="area">エリア</param>
         /// <param name="prefecture">都道府県</param>
         /// <param name="city">市区町村</param>
-        private static Dictionary<string, Dictionary<string, string>> MakeIncentiveMap(DataTable targetPlace, DateTime targetDate)
+        private static Dictionary<string, Dictionary<string, string>> CreateIncentiveMap(DataTable targetPlace, DateTime targetDate)
         {
             using var webDriver = new WebDriverOpration(CreateChromeOptionsArray(), 10);
             var map = new Dictionary<string, Dictionary<string, string>>();
@@ -211,7 +211,7 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="targetPlace"> csvファイル記載地域</param>
         /// <returns>csvファイル記載地域すべてのインセンティブ情報</returns>
-        private static async Task<Dictionary<string, Dictionary<string, string>>> MakeIncentiveMapAsync(DataTable targetPlace, DateTime targetDate)
+        private static async Task<Dictionary<string, Dictionary<string, string>>> CreateIncentiveMapAsync(DataTable targetPlace, DateTime targetDate)
         {
             var map = new Dictionary<string, Dictionary<string, string>>();
             using var reader = targetPlace.CreateDataReader();
