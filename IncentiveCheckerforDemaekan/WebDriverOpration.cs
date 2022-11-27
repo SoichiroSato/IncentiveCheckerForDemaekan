@@ -8,6 +8,7 @@ namespace IncentiveCheckerforDemaekan
     /// </summary>
     public class WebDriverOpration : WebDriver
     {
+
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -23,7 +24,7 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>インセンティブ情報</returns>
         public Dictionary<string,string> GetInsentiveInfo(string area,string prefecture,string city,DateTime targetDate)
         {
-            Driver.Navigate().GoToUrl("https://cdn.demae-can.com/contents/driver/boost/area/index.html");
+            Driver.Navigate().GoToUrl(AppConfig.GetAppSettingsValue("demaekanUrl"));
             Driver.ExecuteScript("const newProto = navigator.__proto__;delete newProto.webdriver;navigator.__proto__ = newProto;");
             Driver.FindElement(By.Id("datepicker")).Clear();
             Driver.FindElement(By.Id("datepicker")).SendKeys(targetDate.ToString("yyyy-MM-dd"));

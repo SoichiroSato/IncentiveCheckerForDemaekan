@@ -2,13 +2,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Data;
-using System.Configuration;
 
 namespace IncentiveCheckerforDemaekan
 {
     class Program
     {
-        public static bool AsyncFlg = ReadAppSettings();
+        /// <summary>
+        /// 非同期か同期にするかのフラグ
+        /// </summary>
+        public static bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
@@ -55,16 +57,6 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// AppSettingで同期通信か非同期通信にするかの設定値を読み取る
-        /// </summary>
-        /// <returns>同期通信か非同期通信か</returns>
-        public static bool ReadAppSettings()
-        {
-            string? AsyncSetting = ConfigurationManager.AppSettings["async"]?.ToLower();
-            return AsyncSetting != null && bool.Parse(AsyncSetting);
-        }
-
-        /// <summary>
         /// Lineに結果を通知してレスポンスコードを返す
         /// </summary>
         /// <param name="accessToken">Lineアクセストークン</param>
@@ -73,12 +65,8 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>レスポンスコード</returns>
         private static async Task<int> SendLine(string accessToken, string message, int resCode)
         {
-            try
-            {
-                await new Line(accessToken).SendMessage(message);
-            }
+            try{ await new Line(accessToken).SendMessage(message); }
             catch { resCode = 1; }
-
             return resCode;
         }
 
