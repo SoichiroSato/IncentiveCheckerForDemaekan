@@ -198,7 +198,10 @@ namespace IncentiveCheckerforDemaekan
             using var reader = targetPlace.CreateDataReader();
             while (reader.Read())
             {
-                map.Add((string)reader["都道府県"] + (string)reader["市区町村"], webDriver.GetInsentiveInfo((string)reader["エリア"], (string)reader["都道府県"], (string)reader["市区町村"],targetDate));
+                var area = (string)reader["エリア"];
+                var prefecture = (string)reader["都道府県"];
+                var city = (string)reader["市区町村"];
+                map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city, targetDate));
             }
             return map;
         }
