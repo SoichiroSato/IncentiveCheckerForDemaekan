@@ -29,7 +29,7 @@ namespace IncentiveCheckerforDemaekan
             using var client = new HttpClient();
             var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "message", message } });
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-            await client.PostAsync("https://notify-api.line.me/api/notify", content);
+            await client.PostAsync(AppConfig.GetAppSettingsValue("lineUrl"), content);
         }
 
 

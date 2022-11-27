@@ -2,13 +2,15 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Data;
-using System.Configuration;
 
 namespace IncentiveCheckerforDemaekan
 {
     class Program
     {
-        public static bool AsyncFlg = ReadAppSettings();
+        /// <summary>
+        /// 非同期か同期にするかのフラグ
+        /// </summary>
+        public static bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
@@ -33,7 +35,7 @@ namespace IncentiveCheckerforDemaekan
                 }
 
                 CheckBrowser(locationPath);
-                message = await MakeSendMessageAsync(locationPath);
+                message = await CreateSendMessageAsync(locationPath);
                 resCode = 0;
             }
             catch (Exception ex)
@@ -55,16 +57,6 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// AppSettingで同期通信か非同期通信にするかの設定値を読み取る
-        /// </summary>
-        /// <returns>同期通信か非同期通信か</returns>
-        public static bool ReadAppSettings()
-        {
-            string? AsyncSetting = ConfigurationManager.AppSettings["async"]?.ToLower();
-            return AsyncSetting != null && bool.Parse(AsyncSetting);
-        }
-
-        /// <summary>
         /// Lineに結果を通知してレスポンスコードを返す
         /// </summary>
         /// <param name="accessToken">Lineアクセストークン</param>
@@ -73,12 +65,8 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>レスポンスコード</returns>
         private static async Task<int> SendLine(string accessToken, string message, int resCode)
         {
-            try
-            {
-                await new Line(accessToken).SendMessage(message);
-            }
+            try{ await new Line(accessToken).SendMessage(message); }
             catch { resCode = 1; }
-
             return resCode;
         }
 
@@ -170,12 +158,12 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        private static async Task<string> MakeSendMessageAsync(string locationPath)
+        private static async Task<string> CreateSendMessageAsync(string locationPath)
         {
             var fileOparate = new FileOparate(locationPath);
             var targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
-            var map = AsyncFlg ? await MakeIncentiveMapAsync(targetPlace, targetDate) : MakeIncentiveMap(targetPlace, targetDate);
+            var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine();
             stringBuilder.AppendLine(targetDate.ToString("MM/dd") + "のインセンティブ情報");
@@ -203,14 +191,17 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="area">エリア</param>
         /// <param name="prefecture">都道府県</param>
         /// <param name="city">市区町村</param>
-        private static Dictionary<string, Dictionary<string, string>> MakeIncentiveMap(DataTable targetPlace, DateTime targetDate)
+        private static Dictionary<string, Dictionary<string, string>> CreateIncentiveMap(DataTable targetPlace, DateTime targetDate)
         {
             using var webDriver = new WebDriverOpration(CreateChromeOptionsArray(), 10);
             var map = new Dictionary<string, Dictionary<string, string>>();
             using var reader = targetPlace.CreateDataReader();
             while (reader.Read())
             {
-                map.Add((string)reader["都道府県"] + (string)reader["市区町村"], webDriver.GetInsentiveInfo((string)reader["エリア"], (string)reader["都道府県"], (string)reader["市区町村"],targetDate));
+                var area = (string)reader["エリア"];
+                var prefecture = (string)reader["都道府県"];
+                var city = (string)reader["市区町村"];
+                map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city, targetDate));
             }
             return map;
         }
@@ -220,7 +211,7 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="targetPlace"> csvファイル記載地域</param>
         /// <returns>csvファイル記載地域すべてのインセンティブ情報</returns>
-        private static async Task<Dictionary<string, Dictionary<string, string>>> MakeIncentiveMapAsync(DataTable targetPlace, DateTime targetDate)
+        private static async Task<Dictionary<string, Dictionary<string, string>>> CreateIncentiveMapAsync(DataTable targetPlace, DateTime targetDate)
         {
             var map = new Dictionary<string, Dictionary<string, string>>();
             using var reader = targetPlace.CreateDataReader();
