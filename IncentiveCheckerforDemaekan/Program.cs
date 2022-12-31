@@ -77,7 +77,7 @@ namespace IncentiveCheckerforDemaekan
         private static void CreateFiles(string locationPath)
         {
             var fileOparate = new FileOparate(locationPath);
-            CreatFile(fileOparate, "ChromeInstall.bat");
+            CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));
             CreatFile(fileOparate, "TargetPlace.csv");
             CreatFile(fileOparate, "LineToken.txt");
         }
@@ -91,7 +91,7 @@ namespace IncentiveCheckerforDemaekan
             var fileOparate = new FileOparate(locationPath);
             var tasks = new List<Task>
             {
-                Task.Run(() =>{CreatFile(fileOparate, "ChromeInstall.bat");}),
+                Task.Run(() =>{CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));}),
                 Task.Run(() =>{CreatFile(fileOparate, "TargetPlace.csv");}),
                 Task.Run(() =>{CreatFile(fileOparate, "LineToken.txt");})
             };
@@ -108,7 +108,11 @@ namespace IncentiveCheckerforDemaekan
             string fileContents = "";
             if(fileName == "ChromeInstall.bat")
             {
-                fileContents = FileContents.ChromeInstall();
+                fileContents = FileContents.ChromeInstallWindows();
+            }
+            else if (fileName == "ChromeInstall.sh")
+            {
+                fileContents = FileContents.ChromeInstallLinux();
             }
             else if (fileName == "TargetPlace.csv")
             {
@@ -126,14 +130,16 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="locationPath"></param>
         private static void CheckBrowser(string locationPath)
         {
-            var browsers = Browser.GetInstallBrowser();
-            if (!browsers.Contains("Google Chrome"))
+            if (Browser.IsInstallChrome()) { return; }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Browser.InstallChromeWindows(Path.Combine(locationPath, "ChromeInstall.bat"));
-                }
+                Browser.InstallChromeWindows(Path.Combine(locationPath, "ChromeInstall.bat"));
             }
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                Browser.InstallChromeLinux(Path.Combine(locationPath, "ChromeInstall.sh"));
+            }
+
         }
 
         /// <summary>

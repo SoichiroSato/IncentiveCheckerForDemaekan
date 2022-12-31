@@ -11,7 +11,7 @@ namespace IncentiveCheckerforDemaekan
         /// ChromeInstall.batの中身を作成する
         /// </summary>
         /// <returns>ChromeInstall.batの中身</returns>
-        public static string ChromeInstall()
+        public static string ChromeInstallWindows()
         {
             var sb = new StringBuilder();
             sb.AppendLine("@echo off");
@@ -32,6 +32,31 @@ namespace IncentiveCheckerforDemaekan
             sb.AppendLine("msiexec /i %CD%\\GoogleChromeStandaloneEnterprise.msi");
             sb.AppendLine("");
             sb.AppendLine("echo %errorlevel%");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// ChromeInstall.shの中身を作成する
+        /// </summary>
+        /// <returns>ChromeInstall.shの中身</returns>
+        public static string ChromeInstallLinux()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("@echo off");
+            sb.Append("#!/bin/bash" + "\n");
+            sb.Append("res=`cat /etc/os-release`" + "\n");
+            sb.Append("echo $res" + "\n");
+            sb.Append("if [[ \"$res\" == *CentOS* -o \"$res\" == *centos*]]; then" + "\n");
+            sb.Append("  sudo yum install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" + "\n");
+            sb.Append("  sudo yum install google-chrome-stable" + "\n");
+            sb.Append("elif [[ \"$res\" == *ubuntu* ]]; then" + "\n");
+            sb.Append("  sudo apt update" + "\n");
+            sb.Append("  sudo apt upgrade" + "\n");
+            sb.Append("  sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" + "\n");
+            sb.Append("  sudo apt install ./google-chrome-stable_current_amd64.deb" + "\n");
+            sb.Append("  sudo apt -f install" + "\n");
+            sb.Append("fi" + "\n");
+
             return sb.ToString();
         }
 

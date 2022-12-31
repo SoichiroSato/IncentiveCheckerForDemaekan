@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace IncentiveCheckerforDemaekan
@@ -9,29 +10,80 @@ namespace IncentiveCheckerforDemaekan
     public class Browser
     {
         /// <summary>
-        /// インストールされているブラウザ名を取得する
+        /// chromeがインストールされているか確認する
         /// </summary>
-        /// <returns>ブラウザ名</returns>
-        public static List<string> GetInstallBrowser()
-        {
-            var browsers = new List<string>();
+        /// <returns>インストールされているかどうか</returns>
+        public static bool IsInstallChrome()
+        {        
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
-                browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-                if((browserKeys == null)) { return browsers; }
-                var subKeyNames = browserKeys.GetSubKeyNames();
-                foreach (var browser in subKeyNames)
-                {
-                    // ブラウザーの名前
-                    RegistryKey? browserKey = browserKeys.OpenSubKey(browser);
-                    if(browserKey == null) { return browsers; }
-                    var browserName = browserKey.GetValue(null);
-                    if (browserName == null) { return browsers; }
-                    browsers.Add((string)browserName);
-                }
+                return IsInstallChromeWindows();
             }
-            return browsers;
+            else if(RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                return IsInstallChromeLinux();
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// windowsでchromeがインストールされているか確認する
+        /// </summary>
+        /// <returns>インストールされているかどうか</returns>
+        public static bool IsInstallChromeWindows()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return false; }
+            var browsers = new List<string>();
+            RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
+            browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+            if ((browserKeys == null)) { return false; }
+            var subKeyNames = browserKeys.GetSubKeyNames();
+            foreach (var browser in subKeyNames)
+            {
+                // ブラウザーの名前
+                RegistryKey? browserKey = browserKeys.OpenSubKey(browser);
+                if (browserKey == null) { return false; }
+                var browserName = browserKey.GetValue(null);
+                if (browserName == null) { return false; }
+                browsers.Add((string)browserName);
+            }
+            return browsers.Contains("Google Chrome");
+        }
+
+        /// <summary>
+        /// Linuxでchromeがインストールされているか確認する
+        /// </summary>
+        /// <returns>インストールされているかどうか</returns>
+        public static bool IsInstallChromeLinux()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { return false; }
+            using var cmd = new Cmd();
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/sh",
+                Arguments = "google-chrome --version",
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            var result = cmd.ExcuteFile(processStartInfo);
+            return !(result.Contains("コマンドが見つかりません") || result.Contains("command not found")) ;
+        }
+
+        /// <summary>
+        /// LinuxでChoromeをインストールする
+        /// </summary>
+        /// <param name="filePath">実行ファイルのフルパス</param>
+        public static void InstallChromeLinux(string filePath)
+        {
+            using var cmd = new Cmd();
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/sh",
+                Arguments = @filePath,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            cmd.ExcuteFile(processStartInfo);
         }
 
         /// <summary>
@@ -40,8 +92,18 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="filePath">実行ファイルのフルパス</param>
         public static void InstallChromeWindows(string filePath)
         {
-            using var cmd = new Cmd("/c " + filePath, false, false, true);
-            cmd.ExcuteFile();
+            using var cmd = new Cmd();
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = Environment.GetEnvironmentVariable("ComSpec"),
+                Arguments = "/c " + filePath,
+                RedirectStandardInput = false,
+                RedirectStandardOutput = false,
+                UseShellExecute = true,
+                CreateNoWindow = true,
+                Verb = "runas"
+            };
+            cmd.ExcuteFile(processStartInfo);
         }
     }
 }

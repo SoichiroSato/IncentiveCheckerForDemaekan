@@ -15,48 +15,20 @@ namespace IncentiveCheckerforDemaekan
         public Process? Process { get; set; }
 
         /// <summary>
-        /// プロセスインフォ
-        /// </summary>
-        public ProcessStartInfo ProcessStartInfo { get; set; }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="arguments">実行ファイルのコマンド</param>
-        /// <param name="redirectStandardInput">入力書き込み</param>
-        /// <param name="redirectStandardOutput">出力読み取り</param>
-        /// <param name="useShellExecute">管理者権限</param>
-        /// <param name="createNoWindow">ウィンドウ表示</param>
-        public Cmd(string arguments, bool redirectStandardInput = false, bool redirectStandardOutput = true, bool useShellExecute = false, bool createNoWindow = true)
-        {
-            ProcessStartInfo = new ProcessStartInfo
-            {
-                FileName = Environment.GetEnvironmentVariable("ComSpec"),
-                Arguments = arguments,
-                RedirectStandardInput = redirectStandardInput,
-                RedirectStandardOutput = redirectStandardOutput,
-                UseShellExecute = useShellExecute,
-                CreateNoWindow = createNoWindow
-            };
-            if (useShellExecute)
-            {
-                //管理者権限で実行するときのおまじない
-                ProcessStartInfo.Verb = "runas";
-            }
-        }
-
-        /// <summary>
         /// コマンドで外部プロセスを起動する
         /// </summary>
-       
-        public void ExcuteFile()
+        /// <param name="processStartInfo">実行するコマンド</param>
+        public string ExcuteFile(ProcessStartInfo processStartInfo)
         {
-            Process = Process.Start(ProcessStartInfo);
+            Process = Process.Start(processStartInfo);
+            string res = "";
             if (Process != null)
             {
+                res = Process.StandardOutput.ReadToEnd();
                 //実行が終わるまで待機
                 Process.WaitForExit();
             }
+            return res;
         }
 
         /// <summary>
