@@ -15,8 +15,7 @@ namespace IncentiveCheckerforDemaekan
 
         public static string GetAppSettingsValue(string key)
         {
-            string? value = ConfigurationManager.AppSettings[key];
-            return value == null ? "" : value;
+            return ConfigurationManager.AppSettings[key] ?? "";
         }
     }
 }

@@ -75,6 +75,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="filePath">実行ファイルのフルパス</param>
         public static void InstallChromeLinux(string filePath)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { return; }
             using var cmd = new Cmd();
             var processStartInfo = new ProcessStartInfo
             {
@@ -92,6 +93,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="filePath">実行ファイルのフルパス</param>
         public static void InstallChromeWindows(string filePath)
         {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }
             using var cmd = new Cmd();
             var processStartInfo = new ProcessStartInfo
             {

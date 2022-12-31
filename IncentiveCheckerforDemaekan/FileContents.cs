@@ -46,7 +46,7 @@ namespace IncentiveCheckerforDemaekan
             sb.Append("#!/bin/bash" + "\n");
             sb.Append("res=`cat /etc/os-release`" + "\n");
             sb.Append("echo $res" + "\n");
-            sb.Append("if [[ \"$res\" == *CentOS* -o \"$res\" == *centos*]]; then" + "\n");
+            sb.Append("if [[ \"$res\" == *CentOS* ]] || [[ \"$res\" == *centos* ]]; then" + "\n");
             sb.Append("  sudo yum install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" + "\n");
             sb.Append("  sudo yum install google-chrome-stable" + "\n");
             sb.Append("elif [[ \"$res\" == *ubuntu* ]]; then" + "\n");
