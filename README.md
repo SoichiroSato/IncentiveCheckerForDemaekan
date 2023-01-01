@@ -34,8 +34,7 @@
 -   PlantUml
 
 ## クラス図
-
-![image](https://user-images.githubusercontent.com/36285803/197114823-256382ac-4d5c-4672-956e-25f687df8453.png)
+![image](https://user-images.githubusercontent.com/36285803/210171652-99d7323b-1ba3-4dc0-b475-14aef70edeb1.png)
 
 ## 利用準備 (LINE）
 1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
