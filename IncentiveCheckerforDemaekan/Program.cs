@@ -109,6 +109,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="fileName">ファイル名</param>
         private static void CreatFile(FileOparate fileOparate,string fileName)
         {
+            if (File.Exists(Path.Combine(fileOparate.LocationPath, fileName))) { return; }
             string fileContents = "";
             if(fileName == "ChromeInstall.bat")
             {
@@ -116,16 +117,20 @@ namespace IncentiveCheckerforDemaekan
             }
             else if (fileName == "ChromeInstall.sh")
             {
-                fileContents = FileContents.ChromeInstallLinux();
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    fileContents = FileContents.ChromeInstallLinux();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    fileContents = FileContents.ChromeInstallMac();
+                }
             }
             else if (fileName == "TargetPlace.csv")
             {
                 fileContents = FileContents.TargetPlace();
             }
-            if (!File.Exists(Path.Combine(fileOparate.LocationPath, fileName)))
-            {
-                fileOparate.WriteFile(fileName, fileContents);
-            }
+            fileOparate.WriteFile(fileName, fileContents);
         }
 
         /// <summary>
@@ -134,16 +139,8 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="locationPath"></param>
         private static void CheckBrowser()
         {
-            if (Browser.IsInstallChrome()) { return; }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                Browser.InstallChromeWindows(Path.Combine(LocationPath, "ChromeInstall.bat"));
-            }
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                Browser.InstallChromeLinux(Path.Combine(LocationPath, "ChromeInstall.sh"));
-            }
-
+            using var browser = new Browser(LocationPath);
+            browser.InstallChrome();
         }
 
         /// <summary>

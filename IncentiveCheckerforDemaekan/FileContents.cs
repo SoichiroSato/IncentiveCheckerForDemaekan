@@ -36,27 +36,56 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// ChromeInstall.shの中身を作成する
+        /// Linux用ChromeInstall.shの中身を作成する
         /// </summary>
         /// <returns>ChromeInstall.shの中身</returns>
         public static string ChromeInstallLinux()
         {
             var sb = new StringBuilder();
-            sb.AppendLine("@echo off");
             sb.Append("#!/bin/bash" + "\n");
-            sb.Append("res=`cat /etc/os-release`" + "\n");
-            sb.Append("echo $res" + "\n");
-            sb.Append("if [[ \"$res\" == *CentOS* ]] || [[ \"$res\" == *centos* ]]; then" + "\n");
-            sb.Append("  sudo yum install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" + "\n");
-            sb.Append("  sudo yum install google-chrome-stable" + "\n");
-            sb.Append("elif [[ \"$res\" == *ubuntu* ]]; then" + "\n");
-            sb.Append("  sudo apt update" + "\n");
-            sb.Append("  sudo apt upgrade" + "\n");
-            sb.Append("  sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" + "\n");
-            sb.Append("  sudo apt install ./google-chrome-stable_current_amd64.deb" + "\n");
-            sb.Append("  sudo apt -f install" + "\n");
+            sb.Append("google=`google-chrome -version`" + "\n");
+            sb.Append("echo $google" + "\n");
+            sb.Append("if [[ \"$google\" == *コマンドが見つかりません* ]] || ([[ \"$google\" == *not* ]] && [[ \"$google\" == *found* ]]); then" + "\n");
+            sb.Append("  os=`cat /etc/os-release`" + "\n");
+            sb.Append("  echo $os" + "\n");
+            sb.Append("  if [[ \"$os\" == *CentOS* ]] || [[ \"$os\" == *centos* ]]; then" + "\n");
+            sb.Append("    sudo yum install https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm" + "\n");
+            sb.Append("    sudo yum install google-chrome-stable" + "\n");
+            sb.Append("  elif [[ \"$os\" == *ubuntu* ]]; then" + "\n");
+            sb.Append("    sudo apt update" + "\n");
+            sb.Append("    sudo apt upgrade" + "\n");
+            sb.Append("    sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" + "\n");
+            sb.Append("    sudo apt install ./google-chrome-stable_current_amd64.deb" + "\n");
+            sb.Append("    sudo apt -f install" + "\n");
+            sb.Append("  fi" + "\n");
             sb.Append("fi" + "\n");
 
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Mac用ChromeInstall.shの中身を作成する
+        /// </summary>
+        /// <returns>ChromeInstall.shの中身</returns>
+        public static string ChromeInstallMac()
+        {
+            var sb = new StringBuilder();
+            sb.Append("#!/bin/bash" + "\n");
+            sb.Append("appList=`ls -1 /Applications/`" + "\n");
+            sb.Append("echo $appList" + "\n");
+            sb.Append("if ! [[ \"$appList\" == *Chrome.app* ]]; then" + "\n");
+            sb.Append("  brew=`brew install google-chrome --cask`" + "\n");
+            sb.Append("  echo $res" + "\n");
+            sb.Append("  if [[ \"$brew\" == *not* ]] && [[ \"$brew\" == *found* ]]; then" + "\n");
+            sb.Append("    /bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)\"");
+            sb.Append("  fi" + "\n");
+            sb.Append("  brewResult=`brew install google-chrome --cask`" + "\n");
+            sb.Append("  echo $brewResult" + "\n");
+            sb.Append("  if ! [[ \"$brewResult\" == *already* ]] && [[ \"$brewResult\" == *installed* ]]; then" + "\n");
+            sb.Append("    brew uninstall google-chrome" + "\n");
+            sb.Append("  fi" + "\n");
+            sb.Append("  brew reinstall --cask google-chrome" + "\n");
+            sb.Append("fi" + "\n");
             return sb.ToString();
         }
 
