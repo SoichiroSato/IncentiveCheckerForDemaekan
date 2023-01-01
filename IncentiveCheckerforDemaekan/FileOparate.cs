@@ -28,7 +28,7 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="file">ファイルのフルパス</param>
         /// <returns>ファイルの中身</returns>
-        public DataTable ReadTargetPlace(string file)
+        public DataTable ConvertCsvToDatatble(string file)
         {
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
             var ret = new DataTable();
@@ -64,7 +64,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="file">ファイルのフルパス</param>
         /// <param name="encoding">エンコードタイプ</param>
         /// <returns>記載内容</returns>
-        public string ReadTxt(string file, Encoding? encoding = null)
+        public string ReadFile(string file, Encoding? encoding = null)
         {
             encoding ??= Encoding.UTF8;
             using var reader = new StreamReader(Path.Combine(LocationPath, file), encoding);
