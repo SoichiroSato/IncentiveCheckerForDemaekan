@@ -105,7 +105,7 @@
 <img src="https://user-images.githubusercontent.com/36285803/196449854-e6be6ccf-18be-4c35-933d-b4cac32a99c4.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196449993-050cc5c9-9e0c-4a35-abb5-db230a93dc17.png" width="300px">
 
-## タスクスケジューラーへの登録例(Linux)
+## タスクスケジューラーへの登録例(Linux、Mac)
 ```
     crontab -e
 ```
