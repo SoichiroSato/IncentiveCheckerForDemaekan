@@ -10,7 +10,12 @@ namespace IncentiveCheckerforDemaekan
         /// <summary>
         /// 非同期か同期にするかのフラグ
         /// </summary>
-        public static bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
+        private static bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
+
+        /// <summary>
+        /// カレントパス
+        /// </summary>
+        private static string LocationPath = GetCurrentPath();
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
@@ -22,20 +27,19 @@ namespace IncentiveCheckerforDemaekan
         {
             string message;
             int resCode;
-            string locationPath = GetCurrentPath();
             try
             {
                 if (AsyncFlg)
                 {
-                    await CreateFilesAsync(locationPath); 
+                    await CreateFilesAsync(); 
                 }
                 else
                 {
-                    CreateFiles(locationPath);
+                    CreateFiles();
                 }
 
-                CheckBrowser(locationPath);
-                message = await CreateSendMessageAsync(locationPath);
+                CheckBrowser();
+                message = await CreateSendMessageAsync();
                 resCode = 0;
             }
             catch (Exception ex)
@@ -47,9 +51,9 @@ namespace IncentiveCheckerforDemaekan
             {
                 resCode = await SendLine(args[0], message, resCode);
             }
-            else if(File.Exists(Path.Combine(locationPath, "LineToken.txt")))
+            else if(File.Exists(Path.Combine(LocationPath, "LineToken.txt")))
             {
-                var accessToken = new FileOparate(locationPath).ReadTxt("LineToken.txt");
+                var accessToken = new FileOparate(LocationPath).ReadTxt("LineToken.txt");
                 resCode = await SendLine(accessToken, message, resCode);
 
             }
@@ -74,10 +78,10 @@ namespace IncentiveCheckerforDemaekan
         /// 必要なファイルがあるかそれぞれ確認してなかったらファイルを作る
         /// </summary>
         /// <param name="locationPath">カレントディレクトリ</param>
-        private static void CreateFiles(string locationPath)
+        private static void CreateFiles()
         {
-            var fileOparate = new FileOparate(locationPath);
-            CreatFile(fileOparate, "ChromeInstall.bat");
+            var fileOparate = new FileOparate(LocationPath);
+            CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));
             CreatFile(fileOparate, "TargetPlace.csv");
             CreatFile(fileOparate, "LineToken.txt");
         }
@@ -86,12 +90,12 @@ namespace IncentiveCheckerforDemaekan
         /// 必要なファイルがあるかそれぞれ確認してなかったらファイルを作る
         /// </summary>
         /// <param name="locationPath">カレントディレクトリ</param>
-        private static async Task CreateFilesAsync(string locationPath)
+        private static async Task CreateFilesAsync()
         {
-            var fileOparate = new FileOparate(locationPath);
+            var fileOparate = new FileOparate(LocationPath);
             var tasks = new List<Task>
             {
-                Task.Run(() =>{CreatFile(fileOparate, "ChromeInstall.bat");}),
+                Task.Run(() =>{CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));}),
                 Task.Run(() =>{CreatFile(fileOparate, "TargetPlace.csv");}),
                 Task.Run(() =>{CreatFile(fileOparate, "LineToken.txt");})
             };
@@ -105,35 +109,38 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="fileName">ファイル名</param>
         private static void CreatFile(FileOparate fileOparate,string fileName)
         {
+            if (File.Exists(Path.Combine(fileOparate.LocationPath, fileName))) { return; }
             string fileContents = "";
             if(fileName == "ChromeInstall.bat")
             {
-                fileContents = FileContents.ChromeInstall();
+                fileContents = FileContents.ChromeInstallWindows();
+            }
+            else if (fileName == "ChromeInstall.sh")
+            {
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    fileContents = FileContents.ChromeInstallLinux();
+                }
+                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    fileContents = FileContents.ChromeInstallMac();
+                }
             }
             else if (fileName == "TargetPlace.csv")
             {
                 fileContents = FileContents.TargetPlace();
             }
-            if (!File.Exists(Path.Combine(fileOparate.LocationPath, fileName)))
-            {
-                fileOparate.WriteFile(fileName, fileContents);
-            }
+            fileOparate.WriteFile(fileName, fileContents);
         }
 
         /// <summary>
         /// Chromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         /// <param name="locationPath"></param>
-        private static void CheckBrowser(string locationPath)
+        private static void CheckBrowser()
         {
-            var browsers = Browser.GetInstallBrowser();
-            if (!browsers.Contains("Google Chrome"))
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    Browser.InstallChromeWindows(Path.Combine(locationPath, "ChromeInstall.bat"));
-                }
-            }
+            using var browser = new Browser(LocationPath);
+            browser.InstallChrome();
         }
 
         /// <summary>
@@ -158,9 +165,9 @@ namespace IncentiveCheckerforDemaekan
         /// Line通知メッセージを作成する
         /// </summary>
         /// <returns>Line通知メッセージ</returns>
-        private static async Task<string> CreateSendMessageAsync(string locationPath)
+        private static async Task<string> CreateSendMessageAsync()
         {
-            var fileOparate = new FileOparate(locationPath);
+            var fileOparate = new FileOparate(LocationPath);
             var targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
             var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);

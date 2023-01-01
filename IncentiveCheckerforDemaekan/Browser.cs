@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace IncentiveCheckerforDemaekan
@@ -6,42 +7,97 @@ namespace IncentiveCheckerforDemaekan
     /// <summary>
     /// ブラウザ系処理クラス
     /// </summary>
-    public class Browser
+    public class Browser : Cmd
     {
         /// <summary>
-        /// インストールされているブラウザ名を取得する
+        /// カレントパス
         /// </summary>
-        /// <returns>ブラウザ名</returns>
-        public static List<string> GetInstallBrowser()
+        public string LocationPath { get; set; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="locationPath">カレントパス</param>
+        public Browser(string locationPath)
         {
-            var browsers = new List<string>();
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
-                browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-                if((browserKeys == null)) { return browsers; }
-                var subKeyNames = browserKeys.GetSubKeyNames();
-                foreach (var browser in subKeyNames)
-                {
-                    // ブラウザーの名前
-                    RegistryKey? browserKey = browserKeys.OpenSubKey(browser);
-                    if(browserKey == null) { return browsers; }
-                    var browserName = browserKey.GetValue(null);
-                    if (browserName == null) { return browsers; }
-                    browsers.Add((string)browserName);
-                }
-            }
-            return browsers;
+            LocationPath = locationPath;
         }
 
         /// <summary>
-        /// WindowsOSでChoromeをインストールする
+        /// Choromeをインストールする
+        /// 各ファンクションでOSチェックを行う
         /// </summary>
-        /// <param name="filePath">実行ファイルのフルパス</param>
-        public static void InstallChromeWindows(string filePath)
+        public void InstallChrome()
         {
-            using var cmd = new Cmd("/c " + filePath, false, false, true);
-            cmd.ExcuteFile();
+            InstallChromeWindows();
+            InstallChromeLinux();
+            InstallChromeMac();
         }
+
+        /// <summary>
+        /// LinuxでChoromeがインストールされているか確認しなかったらインストールする
+        /// </summary>
+        private void InstallChromeLinux()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { return; }
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "/bin/sh",
+                Arguments = Path.Combine(LocationPath, "ChromeInstall.sh"),
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            ExcuteFile(processStartInfo);
+        }
+
+        /// <summary>
+        /// MacでChoromeがインストールされているか確認しなかったらインストールする
+        /// </summary>
+        private void InstallChromeMac()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) { return; }
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+                Arguments = Path.Combine(LocationPath, "ChromeInstall.sh"),
+                RedirectStandardOutput = true,
+                UseShellExecute = false
+            };
+            ExcuteFile(processStartInfo);
+        }
+
+        /// <summary>
+        /// windowsでchromeがインストールされているか確認しなかったらインストールする
+        /// </summary>
+        private void InstallChromeWindows()
+        {
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }
+            var browsers = new List<string>();
+            RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
+            browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
+            if ((browserKeys == null)) { return; }
+            var subKeyNames = browserKeys.GetSubKeyNames();
+            foreach (var browser in subKeyNames)
+            {
+                // ブラウザーの名前
+                RegistryKey? browserKey = browserKeys.OpenSubKey(browser);
+                if (browserKey == null) { return; }
+                var browserName = browserKey.GetValue(null);
+                if (browserName == null) { return; }
+                browsers.Add((string)browserName);
+            }
+            if(!browsers.Contains("Google Chrome")) { return; }
+            var processStartInfo = new ProcessStartInfo
+            {
+                FileName = Environment.GetEnvironmentVariable("ComSpec"),
+                Arguments = "/c " + Path.Combine(LocationPath, "ChromeInstall.bat"),
+                RedirectStandardInput = false,
+                RedirectStandardOutput = false,
+                UseShellExecute = true,
+                CreateNoWindow = true,
+                Verb = "runas"
+            };
+            ExcuteFile(processStartInfo);
+        }       
     }
 }
