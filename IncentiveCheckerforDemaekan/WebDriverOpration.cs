@@ -6,7 +6,7 @@ namespace IncentiveCheckerforDemaekan
     /// <summary>
     /// 出前館 市区町村別ブースト情報サイト操作クラス
     /// </summary>
-    public class WebDriverOpration : WebDriver
+    public class WebDriverOpration : Base.WebDriver
     {
 
         /// <summary>

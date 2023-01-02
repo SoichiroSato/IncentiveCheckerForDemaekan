@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using IncentiveCheckerforDemaekan.Base;
+using Microsoft.Win32;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -67,16 +68,16 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// windowsでchromeがインストールされているか確認しなかったらインストールする
+        /// windowsでChoromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeWindows()
         {
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }
-            var browsers = new List<string>();
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }           
             RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
             browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-            if ((browserKeys == null)) { return; }
+            if (browserKeys == null) { return; }
             var subKeyNames = browserKeys.GetSubKeyNames();
+            var browsers = new List<string>();
             foreach (var browser in subKeyNames)
             {
                 // ブラウザーの名前
@@ -86,7 +87,7 @@ namespace IncentiveCheckerforDemaekan
                 if (browserName == null) { return; }
                 browsers.Add((string)browserName);
             }
-            if(!browsers.Contains("Google Chrome")) { return; }
+            if(browsers.Contains("Google Chrome")) { return; }
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("ComSpec"),

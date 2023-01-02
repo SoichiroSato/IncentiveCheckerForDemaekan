@@ -10,12 +10,12 @@ namespace IncentiveCheckerforDemaekan
         /// <summary>
         /// 非同期か同期にするかのフラグ
         /// </summary>
-        private static bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
+        private static readonly bool AsyncFlg = bool.Parse(AppConfig.GetAppSettingsValue("async").ToLower());
 
         /// <summary>
         /// カレントパス
         /// </summary>
-        private static string LocationPath = GetCurrentPath();
+        private static readonly string LocationPath = GetCurrentPath();
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
@@ -53,7 +53,7 @@ namespace IncentiveCheckerforDemaekan
             }
             else if(File.Exists(Path.Combine(LocationPath, "LineToken.txt")))
             {
-                var accessToken = new FileOparate(LocationPath).ReadTxt("LineToken.txt");
+                var accessToken = new FileOparate(LocationPath).ReadFile("LineToken.txt");
                 resCode = await SendLine(accessToken, message, resCode);
 
             }
@@ -168,7 +168,7 @@ namespace IncentiveCheckerforDemaekan
         private static async Task<string> CreateSendMessageAsync()
         {
             var fileOparate = new FileOparate(LocationPath);
-            var targetPlace = fileOparate.ReadTargetPlace("TargetPlace.csv");
+            var targetPlace = fileOparate.ConvertCsvToDatatble("TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
             var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
