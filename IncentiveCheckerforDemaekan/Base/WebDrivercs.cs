@@ -3,7 +3,7 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 
-namespace IncentiveCheckerforDemaekan
+namespace IncentiveCheckerforDemaekan.Base
 {
     /// <summary>
     /// WebDriver基底クラス
@@ -23,14 +23,14 @@ namespace IncentiveCheckerforDemaekan
         /// WebDriverManagerを使ってWebDriverを設定する
         /// </summary>
         /// <param name="options">choromeオプションに設定する文字列配列</param>
-        public WebDriver(string[]? options = null,double wait = 0)
+        public WebDriver(string[]? options = null, double wait = 0)
         {
             var chromeConfig = new ChromeConfig();
             new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
             string driverVersion = chromeConfig.GetMatchingBrowserVersion();
             string driverPath = $"./Chrome/{driverVersion}/X64/";
             DriverService = ChromeDriverService.CreateDefaultService(driverPath);
-            if(options == null)
+            if (options == null)
             {
                 Driver = new ChromeDriver(DriverService);
             }
@@ -40,11 +40,11 @@ namespace IncentiveCheckerforDemaekan
                 chromeOptions.AddArguments(options);
                 Driver = new ChromeDriver(DriverService, chromeOptions);
             }
-            if(wait != 0)
+            if (wait != 0)
             {
                 Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
-            } 
-           
+            }
+
         }
 
         /// <summary>

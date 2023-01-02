@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 
-namespace IncentiveCheckerforDemaekan
+namespace IncentiveCheckerforDemaekan.Base
 {
     /// <summary>
     /// 外部アプリケーション実行クラス
     /// </summary>
-    public class Cmd :IDisposable
+    public class Cmd : IDisposable
     {
         /// <summary>
         /// プロセスフィールド

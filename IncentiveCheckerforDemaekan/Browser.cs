@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using IncentiveCheckerforDemaekan.Base;
+using Microsoft.Win32;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -74,7 +75,7 @@ namespace IncentiveCheckerforDemaekan
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }           
             RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
             browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-            if ((browserKeys == null)) { return; }
+            if (browserKeys == null) { return; }
             var subKeyNames = browserKeys.GetSubKeyNames();
             var browsers = new List<string>();
             foreach (var browser in subKeyNames)
