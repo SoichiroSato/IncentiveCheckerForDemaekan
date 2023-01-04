@@ -73,9 +73,16 @@
 ```
 
 
-## 利用準備 (GoogleChromeの準備）※Windows以外
+## 利用準備 (GoogleChromeの準備）
 本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
-※Windowsの場合はGoogleChromeがインストールされてない場合は本ツールを管理者権限で実行した場合自動でインストールします。
+本ツールでは実行時にChormeのインストールチェック処理が組み込まれていますが、<br>
+予めインストールしたい場合は別ブラウザでインストーラーをダウンロード実行するか以下のファイルを実行してください
+1. windows<br>
+SampleFile/Windows/ChromeInstall.bat
+2. Linux<br>
+SampleFile/Linux/ChromeInstall.sh
+3. Mac<br>
+SampleFile/Mac/ChromeInstall.sh
 
 ## 実行方法(Windows)
 1. LineToken.txtに取得したLineアクセストークンを入力していない場合
