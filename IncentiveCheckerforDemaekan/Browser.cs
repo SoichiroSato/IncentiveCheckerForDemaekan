@@ -43,8 +43,8 @@ namespace IncentiveCheckerforDemaekan
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) { return; }
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = "/bin/sh",
-                Arguments = Path.Combine(LocationPath, "ChromeInstall.sh"),
+                FileName = "/bin/bash",
+                Arguments = @Path.Combine(LocationPath, "ChromeInstall.sh"),
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };

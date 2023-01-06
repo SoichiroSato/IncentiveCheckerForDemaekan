@@ -44,8 +44,7 @@ namespace IncentiveCheckerforDemaekan
             var sb = new StringBuilder();
             sb.Append("#!/bin/bash" + "\n");
             sb.Append("google=`google-chrome -version`" + "\n");
-            sb.Append("echo $google" + "\n");
-            sb.Append("if [[ \"$google\" == *コマンドが見つかりません* ]] || ([[ \"$google\" == *not* ]] && [[ \"$google\" == *found* ]]); then" + "\n");
+            sb.Append("if [ $? -eq 127 ]; then" + "\n");
             sb.Append("  os=`cat /etc/os-release`" + "\n");
             sb.Append("  echo $os" + "\n");
             sb.Append("  if [[ \"$os\" == *CentOS* ]] || [[ \"$os\" == *centos* ]]; then" + "\n");
@@ -57,7 +56,10 @@ namespace IncentiveCheckerforDemaekan
             sb.Append("    sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" + "\n");
             sb.Append("    sudo apt install ./google-chrome-stable_current_amd64.deb" + "\n");
             sb.Append("    sudo apt -f install" + "\n");
+            sb.Append("    sudo rm google-chrome-stable_current_amd64.deb*" + "\n");
             sb.Append("  fi" + "\n");
+            sb.Append("else" + "\n");
+            sb.Append("  echo $google" + "\n");
             sb.Append("fi" + "\n");
 
             return sb.ToString();
@@ -70,7 +72,7 @@ namespace IncentiveCheckerforDemaekan
         public static string ChromeInstallMac()
         {
             var sb = new StringBuilder();
-            sb.Append("#!/bin/bash" + "\n");
+            sb.Append("#!/bin/ash" + "\n");
             sb.Append("appList=`ls -1 /Applications/`" + "\n");
             sb.Append("echo $appList" + "\n");
             sb.Append("if ! [[ \"$appList\" == *Chrome.app* ]]; then" + "\n");
