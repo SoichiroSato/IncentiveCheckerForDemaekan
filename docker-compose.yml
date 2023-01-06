@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  incentivecheckerfordemaekan:
+    build:
+      context: ./
+      dockerfile: ./IncentiveCheckerforDemaekan/Dockerfile
+    environment:
+      TZ: Asia/Tokyo

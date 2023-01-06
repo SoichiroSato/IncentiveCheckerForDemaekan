@@ -1,7 +1,6 @@
 #!/bin/bash
 google=`google-chrome -version`
-echo $google
-if [[ "$google" == *コマンドが見つかりません* ]] || ([[ "$google" == *not* ]] && [[ "$google" == *found* ]]); then
+if [ $? -eq 127 ]; then
   os=`cat /etc/os-release`
   echo $os
   if [[ "$os" == *CentOS* ]] || [[ "$os" == *centos* ]]; then
@@ -13,5 +12,8 @@ if [[ "$google" == *コマンドが見つかりません* ]] || ([[ "$google" ==
     sudo wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
     sudo apt install ./google-chrome-stable_current_amd64.deb
     sudo apt -f install
+    sudo rm google-chrome-stable_current_amd64.deb*
   fi
+else
+  echo $google
 fi
