@@ -22,16 +22,16 @@
 -   Bat
 -   Shell
 
-■ ライブラリ<br>
+■ ライブラリ/API<br>
 
 -   Selenium
+-   LineNotify
 
 ■ その他<br>
 
 -   GitHub
 -   SourceTree
--   LineNotify
--   GoogleChrome
+-   Docker | docker-compose
 -   PlantUml
 
 ## クラス図
@@ -105,6 +105,27 @@ SampleFile/Mac/ChromeInstall.sh
 ```
     dotnet IncentiveCheckerforDemaekan.dll
 ``` 
+
+## 実行方法(Docker)
+※事前にdockerをインストールしておいてください。
+※ビルド前に以下のファイルの設定をしてください</br>
+
+IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\TargetPlace.csv</br>
+IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\LineToken.txt
+
+1. ビルド
+```
+    docker-compose build
+```    
+2. コンテナ起動（実行）
+```
+    docker-compose up
+``` 
+3. コンテナ停止
+```
+    docker-compose down
+``` 
+
 ## タスクスケジューラーへの登録例(Windows)
 
 <img src="https://user-images.githubusercontent.com/36285803/196444072-e66561c1-3a5c-4283-b716-6a585de4214e.png" width="300px">
