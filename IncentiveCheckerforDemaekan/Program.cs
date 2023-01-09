@@ -130,7 +130,7 @@ namespace IncentiveCheckerforDemaekan
             {
                 fileContents = FileContents.TargetPlace();
             }
-            fileOparate.WriteFile(fileName, fileContents);
+            fileOparate.WriteFile(fileName, fileContents,false, new UTF8Encoding());
         }
 
         /// <summary>
