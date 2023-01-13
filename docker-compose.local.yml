@@ -3,6 +3,6 @@ services:
   incentivecheckerfordemaekan:
     build:
       context: ./
-      dockerfile: ./IncentiveCheckerforDemaekan/Docker/Prod/Dockerfile
+      dockerfile: ./IncentiveCheckerforDemaekan/Docker/Dev/Dockerfile
     environment:
       TZ: Asia/Tokyo
