@@ -25,6 +25,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="args">Lineアクセストークン</param>
         static async Task<int> Main(string[] args)
         {
+            Console.WriteLine(DateTime.Now);
             string message;
             int resCode;
             try
@@ -44,6 +45,7 @@ namespace IncentiveCheckerforDemaekan
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 message = ex.Message;
                 resCode = 1;
             }
