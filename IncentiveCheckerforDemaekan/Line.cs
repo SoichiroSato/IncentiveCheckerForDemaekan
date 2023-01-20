@@ -1,11 +1,12 @@
 ﻿using System.Net.Http.Headers;
+using IncentiveCheckerforDemaekan.Base;
 
 namespace IncentiveCheckerforDemaekan
 {
     /// <summary>
     /// Line操作クラス
     /// </summary>
-    public class Line
+    public class Line : Http
     {
         /// <summary>
         /// アクセストークン
@@ -15,9 +16,9 @@ namespace IncentiveCheckerforDemaekan
         /// コンストラクタ
         /// </summary>
         /// <param name="accessToken">Lineアクセストークン</param>
-        public Line(string accessToken)
+        public Line(string accessToken) : base()
         {
-            AccessToken = accessToken;
+            AccessToken = accessToken;         
         }
         /// <summary>
         /// Line通知メッセージを送信する
@@ -26,10 +27,8 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>Line通知メッセージを送信するタスク</returns>
         public async Task SendMessage(string message)
         {
-            using var client = new HttpClient();
             var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "message", message } });
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AccessToken);
-            await client.PostAsync(AppConfig.GetAppSettingsValue("lineUrl"), content);
+            await PostRequestAsync(AppConfig.GetAppSettingsValue("lineUrl"), content, new AuthenticationHeaderValue("Bearer", AccessToken));
         }
     }
 }
