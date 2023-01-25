@@ -71,8 +71,15 @@ namespace IncentiveCheckerforDemaekan
         /// <returns>レスポンスコード</returns>
         private static async Task<int> SendLine(string accessToken, string message, int resCode)
         {
-            try{ await new Line(accessToken).SendMessage(message); }
-            catch { resCode = 1; }
+            try
+            { 
+                await new Line(accessToken).SendMessage(message); 
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                resCode = 1; 
+            }
             return resCode;
         }
 
