@@ -30,15 +30,6 @@ namespace IncentiveCheckerforDemaekan
             int resCode;
             try
             {
-                if (AsyncFlg)
-                {
-                    await CreateFilesAsync(); 
-                }
-                else
-                {
-                    CreateFiles();
-                }
-
                 CheckBrowser();
                 message = await CreateSendMessageAsync();
                 resCode = 0;
@@ -53,9 +44,9 @@ namespace IncentiveCheckerforDemaekan
             {
                 resCode = await SendLine(args[0], message, resCode);
             }
-            else if(File.Exists(Path.Combine(LocationPath, "LineToken.txt")))
+            else
             {
-                var accessToken = new FileOparate(LocationPath).ReadFile("LineToken.txt");
+                var accessToken = new FileOparate(LocationPath).ReadFile("File/LineToken.txt");
                 resCode = await SendLine(accessToken, message, resCode);
 
             }
@@ -83,64 +74,6 @@ namespace IncentiveCheckerforDemaekan
             return resCode;
         }
 
-        /// <summary>
-        /// 必要なファイルがあるかそれぞれ確認してなかったらファイルを作る
-        /// </summary>
-        /// <param name="locationPath">カレントディレクトリ</param>
-        private static void CreateFiles()
-        {
-            var fileOparate = new FileOparate(LocationPath);
-            CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));
-            CreatFile(fileOparate, "TargetPlace.csv");
-            CreatFile(fileOparate, "LineToken.txt");
-        }
-
-        /// <summary>
-        /// 必要なファイルがあるかそれぞれ確認してなかったらファイルを作る
-        /// </summary>
-        /// <param name="locationPath">カレントディレクトリ</param>
-        private static async Task CreateFilesAsync()
-        {
-            var fileOparate = new FileOparate(LocationPath);
-            var tasks = new List<Task>
-            {
-                Task.Run(() =>{CreatFile(fileOparate, "ChromeInstall" + (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? ".bat" : ".sh"));}),
-                Task.Run(() =>{CreatFile(fileOparate, "TargetPlace.csv");}),
-                Task.Run(() =>{CreatFile(fileOparate, "LineToken.txt");})
-            };
-            await Task.WhenAll(tasks);
-        }
-
-        /// <summary>
-        /// 必要なファイルがあるか確認してなかったらファイルを作る
-        /// </summary>
-        /// <param name="fileOparate">FileOparateオブジェクト</param>
-        /// <param name="fileName">ファイル名</param>
-        private static void CreatFile(FileOparate fileOparate,string fileName)
-        {
-            if (File.Exists(Path.Combine(fileOparate.LocationPath, fileName))) { return; }
-            string fileContents = "";
-            if(fileName == "ChromeInstall.bat")
-            {
-                fileContents = FileContents.ChromeInstallWindows();
-            }
-            else if (fileName == "ChromeInstall.sh")
-            {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-                {
-                    fileContents = FileContents.ChromeInstallLinux();
-                }
-                else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-                {
-                    fileContents = FileContents.ChromeInstallMac();
-                }
-            }
-            else if (fileName == "TargetPlace.csv")
-            {
-                fileContents = FileContents.TargetPlace();
-            }
-            fileOparate.WriteFile(fileName, fileContents,false, new UTF8Encoding());
-        }
 
         /// <summary>
         /// Chromeがインストールされているか確認しなかったらインストールする
@@ -177,7 +110,7 @@ namespace IncentiveCheckerforDemaekan
         private static async Task<string> CreateSendMessageAsync()
         {
             var fileOparate = new FileOparate(LocationPath);
-            var targetPlace = fileOparate.ConvertCsvToDatatble("TargetPlace.csv");
+            var targetPlace = fileOparate.ConvertCsvToDatatble("File/TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
             var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();

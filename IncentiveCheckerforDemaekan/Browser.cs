@@ -44,7 +44,7 @@ namespace IncentiveCheckerforDemaekan
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = "/bin/bash",
-                Arguments = @Path.Combine(LocationPath, "ChromeInstall.sh"),
+                Arguments = @Path.Combine(LocationPath, "File/Linux/ChromeInstall.sh"),
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
@@ -60,7 +60,7 @@ namespace IncentiveCheckerforDemaekan
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
-                Arguments = Path.Combine(LocationPath, "ChromeInstall.sh"),
+                Arguments = Path.Combine(LocationPath, "File/Mac/ChromeInstall.sh"),
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
@@ -91,7 +91,7 @@ namespace IncentiveCheckerforDemaekan
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("ComSpec"),
-                Arguments = "/c " + Path.Combine(LocationPath, "ChromeInstall.bat"),
+                Arguments = "/c " + Path.Combine(LocationPath, "File/Windows/ChromeInstall.bat"),
                 RedirectStandardInput = false,
                 RedirectStandardOutput = false,
                 UseShellExecute = true,
