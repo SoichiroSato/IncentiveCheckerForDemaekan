@@ -21,7 +21,5 @@ RUN dotnet publish "IncentiveCheckerforDemaekan.csproj" -c Debug -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY IncentiveCheckerforDemaekan/SampleFile/TargetPlace.csv /app/TargetPlace.csv
-COPY IncentiveCheckerforDemaekan/SampleFile/LineToken.txt /app/LineToken.txt
 ENTRYPOINT ["dotnet", "IncentiveCheckerforDemaekan.dll"]
 
