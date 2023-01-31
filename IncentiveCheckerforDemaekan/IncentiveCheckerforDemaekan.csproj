@@ -16,4 +16,22 @@
     <PackageReference Include="WebDriverManager" Version="2.14.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="File\LineToken.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="File\Linux\ChromeInstall.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="File\Mac\ChromeInstall.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="File\TargetPlace.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="File\Windows\ChromeInstall.bat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
