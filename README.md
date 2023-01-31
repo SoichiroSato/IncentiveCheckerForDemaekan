@@ -35,7 +35,7 @@
 -   PlantUml
 
 ## クラス図
-![image](https://user-images.githubusercontent.com/36285803/210171652-99d7323b-1ba3-4dc0-b475-14aef70edeb1.png)
+![image](https://user-images.githubusercontent.com/36285803/215804142-932ec2de-46ab-49d5-9621-31233b3936b1.png)
 
 ## 利用準備 (LINE）
 1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
@@ -78,11 +78,11 @@
 本ツールでは実行時にChormeのインストールチェック処理が組み込まれていますが、<br>
 予めインストールしたい場合は別ブラウザでインストーラーをダウンロード実行するか以下のファイルを実行してください
 1. windows<br>
-SampleFile/Windows/ChromeInstall.bat
+File/Windows/ChromeInstall.bat
 2. Linux<br>
-SampleFile/Linux/ChromeInstall.sh
+File/Linux/ChromeInstall.sh
 3. Mac<br>
-SampleFile/Mac/ChromeInstall.sh
+File/Mac/ChromeInstall.sh
 
 ## 実行方法(Windows)
 1. LineToken.txtに取得したLineアクセストークンを入力していない場合
