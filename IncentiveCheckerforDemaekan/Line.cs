@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
-using IncentiveCheckerforDemaekan.Base;
+using IncentiveCheckerForDemaekan.Base;
 
-namespace IncentiveCheckerforDemaekan
+namespace IncentiveCheckerForDemaekan
 {
     /// <summary>
     /// Line操作クラス

@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace IncentiveCheckerforDemaekan
+namespace IncentiveCheckerForDemaekan
 {
     /// <summary>
     /// App.config関係処理

@@ -20,22 +20,22 @@
 -   .Net 6.0
 -   C#
 -   Bat
+-   Shell
 
-■ ライブラリ<br>
+■ ライブラリ/API<br>
 
 -   Selenium
+-   LineNotify
 
 ■ その他<br>
 
 -   GitHub
 -   SourceTree
--   LineNotify
--   GoogleChrome
+-   Docker | docker-compose
 -   PlantUml
 
 ## クラス図
-
-![image](https://user-images.githubusercontent.com/36285803/197114823-256382ac-4d5c-4672-956e-25f687df8453.png)
+![image](https://user-images.githubusercontent.com/36285803/215804142-932ec2de-46ab-49d5-9621-31233b3936b1.png)
 
 ## 利用準備 (LINE）
 1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
@@ -73,9 +73,16 @@
 ```
 
 
-## 利用準備 (GoogleChromeの準備）※Windows以外
+## 利用準備 (GoogleChromeの準備）
 本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
-※Windowsの場合はGoogleChromeがインストールされてない場合は本ツールを管理者権限で実行した場合自動でインストールします。
+本ツールでは実行時にChormeのインストールチェック処理が組み込まれていますが、<br>
+予めインストールしたい場合は別ブラウザでインストーラーをダウンロード実行するか以下のファイルを実行してください
+1. windows<br>
+File/Windows/ChromeInstall.bat
+2. Linux<br>
+File/Linux/ChromeInstall.sh
+3. Mac<br>
+File/Mac/ChromeInstall.sh
 
 ## 実行方法(Windows)
 1. LineToken.txtに取得したLineアクセストークンを入力していない場合
@@ -98,6 +105,27 @@
 ```
     dotnet IncentiveCheckerforDemaekan.dll
 ``` 
+
+## 実行方法(Docker)
+※事前にdockerをインストールしておいてください。
+※ビルド前に以下のファイルの設定をしてください</br>
+
+IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\TargetPlace.csv</br>
+IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\LineToken.txt
+
+1. ビルド
+```
+    docker-compose build
+```    
+2. コンテナ起動（実行）
+```
+    docker-compose up
+``` 
+3. コンテナ停止
+```
+    docker-compose down
+``` 
+
 ## タスクスケジューラーへの登録例(Windows)
 
 <img src="https://user-images.githubusercontent.com/36285803/196444072-e66561c1-3a5c-4283-b716-6a585de4214e.png" width="300px">
@@ -105,7 +133,7 @@
 <img src="https://user-images.githubusercontent.com/36285803/196449854-e6be6ccf-18be-4c35-933d-b4cac32a99c4.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196449993-050cc5c9-9e0c-4a35-abb5-db230a93dc17.png" width="300px">
 
-## タスクスケジューラーへの登録例(Linux)
+## タスクスケジューラーへの登録例(Linux、Mac)
 ```
     crontab -e
 ```
