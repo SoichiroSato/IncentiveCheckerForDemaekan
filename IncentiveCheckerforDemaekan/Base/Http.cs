@@ -1,6 +1,6 @@
 ﻿using System.Net.Http.Headers;
 
-namespace IncentiveCheckerForDemaekan.Base
+namespace IncentiveCheckerforDemaekan.Base
 {
     /// <summary>
     /// http操作クラス
@@ -8,7 +8,7 @@ namespace IncentiveCheckerForDemaekan.Base
     public class Http
     {
         /// <summary>
-        /// HttpClientオブジェクト
+        /// HttpClietオブジェクト
         /// </summary>
         public HttpClient HttpClient { get; set; }
 
@@ -61,6 +61,7 @@ namespace IncentiveCheckerForDemaekan.Base
         /// </summary>
         /// <param name="url">リクエスト先</param>
         /// <param name="contentType">ContentType</param>
+        /// <param name="postdata">Postデータ</param>
         /// <param name="authenticationHeaderValue">basic認証</param>
         /// <returns>レスポンス結果</returns>
         public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue? authenticationHeaderValue = null)

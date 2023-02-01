@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace IncentiveCheckerForDemaekan.Base
+namespace IncentiveCheckerforDemaekan.Base
 {
     /// <summary>
     /// 外部アプリケーション実行クラス
@@ -10,7 +10,7 @@ namespace IncentiveCheckerForDemaekan.Base
         /// <summary>
         /// プロセスフィールド
         /// Process.Startがnullを返すケースがあるためusingが使えないので
-        /// IDisposeで対応する
+        /// Idisposeで対応する
         /// </summary>
         public Process? Process { get; set; }
 
@@ -18,7 +18,7 @@ namespace IncentiveCheckerForDemaekan.Base
         /// コマンドで外部プロセスを起動する
         /// </summary>
         /// <param name="processStartInfo">実行するコマンド</param>
-        public string ExecuteFile(ProcessStartInfo processStartInfo)
+        public string ExcuteFile(ProcessStartInfo processStartInfo)
         {
             Process = Process.Start(processStartInfo);
             string res = "";

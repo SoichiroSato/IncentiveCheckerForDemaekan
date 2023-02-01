@@ -3,7 +3,7 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 
-namespace IncentiveCheckerForDemaekan.Base
+namespace IncentiveCheckerforDemaekan.Base
 {
     /// <summary>
     /// WebDriver基底クラス
@@ -22,7 +22,7 @@ namespace IncentiveCheckerForDemaekan.Base
         /// コンストラクタ
         /// WebDriverManagerを使ってWebDriverを設定する
         /// </summary>
-        /// <param name="options">Chromeオプションに設定する文字列配列</param>
+        /// <param name="options">choromeオプションに設定する文字列配列</param>
         public WebDriver(string[]? options = null, double wait = 0)
         {
             Environment.SetEnvironmentVariable("no_proxy","localhost");

@@ -1,9 +1,9 @@
-﻿using IncentiveCheckerForDemaekan.Base;
+﻿using IncentiveCheckerforDemaekan.Base;
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace IncentiveCheckerForDemaekan
+namespace IncentiveCheckerforDemaekan
 {
     /// <summary>
     /// ブラウザ系処理クラス
@@ -25,7 +25,7 @@ namespace IncentiveCheckerForDemaekan
         }
 
         /// <summary>
-        /// Chromeをインストールする
+        /// Choromeをインストールする
         /// 各ファンクションでOSチェックを行う
         /// </summary>
         public void InstallChrome()
@@ -36,7 +36,7 @@ namespace IncentiveCheckerForDemaekan
         }
 
         /// <summary>
-        /// LinuxでChromeがインストールされているか確認しなかったらインストールする
+        /// LinuxでChoromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeLinux()
         {
@@ -48,11 +48,11 @@ namespace IncentiveCheckerForDemaekan
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
-            ExecuteFile(processStartInfo);
+            ExcuteFile(processStartInfo);
         }
 
         /// <summary>
-        /// MacでChromeがインストールされているか確認しなかったらインストールする
+        /// MacでChoromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeMac()
         {
@@ -64,11 +64,11 @@ namespace IncentiveCheckerForDemaekan
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
-            ExecuteFile(processStartInfo);
+            ExcuteFile(processStartInfo);
         }
 
         /// <summary>
-        /// windowsでChromeがインストールされているか確認しなかったらインストールする
+        /// windowsでChoromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeWindows()
         {
@@ -98,7 +98,7 @@ namespace IncentiveCheckerForDemaekan
                 CreateNoWindow = true,
                 Verb = "runas"
             };
-            ExecuteFile(processStartInfo);
+            ExcuteFile(processStartInfo);
         }       
     }
 }

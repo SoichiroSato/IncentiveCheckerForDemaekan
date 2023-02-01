@@ -2,12 +2,12 @@
 using System.Data;
 using System.Text;
 
-namespace IncentiveCheckerForDemaekan
+namespace IncentiveCheckerforDemaekan
 {
     /// <summary>
     /// ファイル操作クラス
     /// </summary>
-    public class FileOperate
+    public class FileOparate
     {
         /// <summary>
         /// 実行ディレクトリ
@@ -18,7 +18,7 @@ namespace IncentiveCheckerForDemaekan
         /// コンストラクタ
         /// </summary>
         /// <param name="locationPath"></param>
-        public FileOperate(string locationPath)
+        public FileOparate(string locationPath)
         {
             LocationPath = locationPath;
         }
@@ -28,7 +28,7 @@ namespace IncentiveCheckerForDemaekan
         /// </summary>
         /// <param name="file">ファイルのフルパス</param>
         /// <returns>ファイルの中身</returns>
-        public DataTable ConvertCsvToDataTable(string file)
+        public DataTable ConvertCsvToDatatble(string file)
         {
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
             var ret = new DataTable();

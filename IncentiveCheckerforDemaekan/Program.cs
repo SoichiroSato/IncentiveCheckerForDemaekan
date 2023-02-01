@@ -1,8 +1,9 @@
 ﻿using System.Text;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Data;
 
-namespace IncentiveCheckerForDemaekan
+namespace IncentiveCheckerforDemaekan
 {
     class Program
     {
@@ -45,7 +46,7 @@ namespace IncentiveCheckerForDemaekan
             }
             else
             {
-                var accessToken = new FileOperate(LocationPath).ReadFile("File/LineToken.txt");
+                var accessToken = new FileOparate(LocationPath).ReadFile("File/LineToken.txt");
                 resCode = await SendLine(accessToken, message, resCode);
 
             }
@@ -108,8 +109,8 @@ namespace IncentiveCheckerForDemaekan
         /// <returns>Line通知メッセージ</returns>
         private static async Task<string> CreateSendMessageAsync()
         {
-            var fileOperate = new FileOperate(LocationPath);
-            var targetPlace = fileOperate.ConvertCsvToDataTable("File/TargetPlace.csv");
+            var fileOparate = new FileOparate(LocationPath);
+            var targetPlace = fileOparate.ConvertCsvToDatatble("File/TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
             var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
@@ -141,7 +142,7 @@ namespace IncentiveCheckerForDemaekan
         /// <param name="city">市区町村</param>
         private static Dictionary<string, Dictionary<string, string>> CreateIncentiveMap(DataTable targetPlace, DateTime targetDate)
         {
-            using var webDriver = new WebDriverOperation(CreateChromeOptionsArray(), 10);
+            using var webDriver = new WebDriverOpration(CreateChromeOptionsArray(), 10);
             var map = new Dictionary<string, Dictionary<string, string>>();
             using var reader = targetPlace.CreateDataReader();
             while (reader.Read())
@@ -149,7 +150,7 @@ namespace IncentiveCheckerForDemaekan
                 var area = (string)reader["エリア"];
                 var prefecture = (string)reader["都道府県"];
                 var city = (string)reader["市区町村"];
-                map.Add(prefecture + city, webDriver.GetIncentiveInfo(area, prefecture, city, targetDate));
+                map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city, targetDate));
             }
             return map;
         }
@@ -184,8 +185,8 @@ namespace IncentiveCheckerForDemaekan
         /// <param name="city">市区町村</param>
         private static void AddMapOfIncentive(Dictionary<string, Dictionary<string, string>> map, string area, string prefecture, string city, DateTime targetDate)
         {
-            using var webDriver = new WebDriverOperation(CreateChromeOptionsArray(), 10);
-            map.Add(prefecture + city, webDriver.GetIncentiveInfo(area, prefecture, city, targetDate));
+            using var webDriver = new WebDriverOpration(CreateChromeOptionsArray(), 10);
+            map.Add(prefecture + city, webDriver.GetInsentiveInfo(area, prefecture, city, targetDate));
         }
 
         /// <summary>
