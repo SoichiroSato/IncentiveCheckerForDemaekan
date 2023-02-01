@@ -7,7 +7,7 @@ namespace IncentiveCheckerforDemaekan
     /// <summary>
     /// ファイル操作クラス
     /// </summary>
-    public class FileOparate
+    public class FileOperate
     {
         /// <summary>
         /// 実行ディレクトリ
@@ -18,7 +18,7 @@ namespace IncentiveCheckerforDemaekan
         /// コンストラクタ
         /// </summary>
         /// <param name="locationPath"></param>
-        public FileOparate(string locationPath)
+        public FileOperate(string locationPath)
         {
             LocationPath = locationPath;
         }
@@ -28,7 +28,7 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="file">ファイルのフルパス</param>
         /// <returns>ファイルの中身</returns>
-        public DataTable ConvertCsvToDatatble(string file)
+        public DataTable ConvertCsvToDataTable(string file)
         {
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
             var ret = new DataTable();
