@@ -21,5 +21,7 @@ RUN dotnet publish "IncentiveCheckerforDemaekan.csproj" -c Debug -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN sed -i 's/DEFAULT@SECLEVEL=2/DEFAULT@SECLEVEL=1/g' /etc/ssl/openssl.cnf && \
+    sed -i 's/MinProtocol = TLSv1.2/MinProtocol = TLSv1/g' /etc/ssl/openssl.cnf
 ENTRYPOINT ["dotnet", "IncentiveCheckerforDemaekan.dll"]
 
