@@ -10,7 +10,7 @@ namespace IncentiveCheckerforDemaekan.Base
         /// <summary>
         /// プロセスフィールド
         /// Process.Startがnullを返すケースがあるためusingが使えないので
-        /// Idisposeで対応する
+        /// IDisposeで対応する
         /// </summary>
         public Process? Process { get; set; }
 
@@ -18,7 +18,7 @@ namespace IncentiveCheckerforDemaekan.Base
         /// コマンドで外部プロセスを起動する
         /// </summary>
         /// <param name="processStartInfo">実行するコマンド</param>
-        public string ExcuteFile(ProcessStartInfo processStartInfo)
+        public string ExecuteFile(ProcessStartInfo processStartInfo)
         {
             Process = Process.Start(processStartInfo);
             string res = "";
