@@ -25,7 +25,6 @@ namespace IncentiveCheckerforDemaekan.Base
         /// <param name="options">chromeオプションに設定する文字列配列</param>
         public WebDriver(string[]? options = null, double wait = 0)
         {
-            Environment.SetEnvironmentVariable("no_proxy","localhost");
             var chromeConfig = new ChromeConfig();
             new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
             string driverVersion = chromeConfig.GetMatchingBrowserVersion();
