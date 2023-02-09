@@ -25,7 +25,7 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// Choromeをインストールする
+        /// Chromeをインストールする
         /// 各ファンクションでOSチェックを行う
         /// </summary>
         public void InstallChrome()
@@ -36,7 +36,7 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// LinuxでChoromeがインストールされているか確認しなかったらインストールする
+        /// LinuxでChromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeLinux()
         {
@@ -48,11 +48,11 @@ namespace IncentiveCheckerforDemaekan
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
-            ExcuteFile(processStartInfo);
+            ExecuteFile(processStartInfo);
         }
 
         /// <summary>
-        /// MacでChoromeがインストールされているか確認しなかったらインストールする
+        /// MacでChromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeMac()
         {
@@ -64,11 +64,11 @@ namespace IncentiveCheckerforDemaekan
                 RedirectStandardOutput = true,
                 UseShellExecute = false
             };
-            ExcuteFile(processStartInfo);
+            ExecuteFile(processStartInfo);
         }
 
         /// <summary>
-        /// windowsでChoromeがインストールされているか確認しなかったらインストールする
+        /// windowsでChromeがインストールされているか確認しなかったらインストールする
         /// </summary>
         private void InstallChromeWindows()
         {
@@ -98,7 +98,7 @@ namespace IncentiveCheckerforDemaekan
                 CreateNoWindow = true,
                 Verb = "runas"
             };
-            ExcuteFile(processStartInfo);
+            ExecuteFile(processStartInfo);
         }       
     }
 }
