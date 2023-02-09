@@ -37,29 +37,36 @@
 ## クラス図
 ![image](https://user-images.githubusercontent.com/36285803/215804142-932ec2de-46ab-49d5-9621-31233b3936b1.png)
 
-## 利用準備 (LINE）
+## 前提
+
+1. Lineアカウントを持っている。
+2. 本プロジェクトをクローンまたはダウンロード後解答済み
+
+## 利用準備
+
+### 1.アクセストークンの取得（必須）
 1. [LINE Notify](https://notify-bot.line.me/ja/)の公式ページへいき、ログインします。 ログインIDとパスワードは個人で利用しているLINEの資格情報と同じです。
 2. 右上にある自分の名前 > マイページ をクリックします。
 3. アクセストークンの発行(開発者向け)」 > 「トークンを発行する」をクリックします。
-4. 「トークンを発行する」クリックすると、どのグループへ通知するかの選択画面が表示されるので任意のグループを選択してアクセストークンを発行します。 ※発行されたアクセストークンはメモ帳等に保存してください。
+4. 「トークンを発行する」クリックすると、どのグループへ通知するかの選択画面が表示されるので任意のグループを選択してアクセストークンを発行します。<br> ※発行されたアクセストークンはメモ帳等に保存してください。
 5. Line Notifyを選択したグループに招待します。
 
-## 利用準備 (本プロジェクトのビルド、ファイルの設定）
-
-1. 本プロジェクトをクローンするか、zipとしてダウンロードし解凍します。
-2. 本プロジェクトをビルドします。
-3. ビルドしてできた「TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
+### 2.対象地域の設定（必須）
+「File/TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
 
 <img src="https://user-images.githubusercontent.com/36285803/196426396-c082219a-cb8c-4936-a4c9-c11bb39a526c.png" width="800px">
 
-4. コマンドライン引数を利用しない場合はビルドしてできた「LineToken.txt」に取得したLineアクセストークンを入力します。
+### 3.LineTokenの設定（Dockerを使う場合のみ必須）
 
-## 利用準備 (処理設定）
+コマンドライン引数を利用しない場合は<br>
+「File/LineToken.txt」に取得したLineトークンを入力して保存します。
+
+### 4.処理設定（任意）
 本ツールは一部非同期通信処理を実装しております。<br/>
 非同期通信で処理を行う場合は実行速度向上が見込めます。<br/>
 ただし実行PCやサーバのスペックによっては処理負荷が向上するためエラーが発生する場合もございます。<br/>
 その場合は同期通信での実行をお願いします。<br/>
-設定方法はApp.config（IncentiveCheckerforDemaekan.dll.config)の以下の設定を行ってください。<br/>
+設定方法はApp.Release.configの以下の設定を行ってください。<br/>
 デフォルトは同期通信です。<br/>
 ```
 <?xml version="1.0" encoding="utf-8" ?>
@@ -73,45 +80,68 @@
 ```
 
 
-## 利用準備 (GoogleChromeの準備）
-本ツールにはGoogleChromeを使うためインストールをしといてください。<br>
+### 5.GoogleChromeの準備（任意・エラーが出た場合・Docker以外）
 本ツールでは実行時にChormeのインストールチェック処理が組み込まれていますが、<br>
 予めインストールしたい場合は別ブラウザでインストーラーをダウンロード実行するか以下のファイルを実行してください
+
+#### 別ブラウザでインストーラーをダウンロード実行する場合
+https://www.google.com/intl/ja_jp/chrome/
+
+#### ファイルでインストールする場合
+
 1. windows<br>
-File/Windows/ChromeInstall.bat
+File/Windows/ChromeInstall.bat<br>
+※管理者権限で実行してください
 2. Linux<br>
 File/Linux/ChromeInstall.sh
 3. Mac<br>
-File/Mac/ChromeInstall.sh
+File/Mac/ChromeInstall.sh<br>
+※管理者権限で実行してください
 
-## 実行方法(Windows)
-1. LineToken.txtに取得したLineアクセストークンを入力していない場合
+## ビルド・実行方法
+
+Dockerを使わない場合は<br>
+事前に.net6のSDK、runtimeなどをインストールしておいてください。
+
+https://dotnet.microsoft.com/ja-jp/download/dotnet/6.0
+
+### Windows
+
+1. ビルド
+
+```
+    dotnet build -c Release
+```   
+
+2. 実行
+
+LineToken.txtに取得したアクセストークンを入力していない場合
 ```
     IncentiveCheckerforDemaekan.exe [取得したLineアクセストークン]
 ```
-2. LineToken.txtに取得したLineアクセストークンを入力している場合
+LineToken.txtに取得したアクセストークンを入力している場合
 ```
     IncentiveCheckerforDemaekan.exe 
 ```
 
-## 実行方法(Linux)
-※事前に.net6 .net SDK .net runtimeなどをインストールしておいてください。
-
-1. LineToken.txtに取得したLineアクセストークンを入力していない場合
+### Mac・Linux
+1. ビルド
 ```
-    dotnet IncentiveCheckerforDemaekan.dll [取得したLineアクセストークン]
+    dotnet build -c Release
 ```    
-2. LineToken.txtに取得したLineアクセストークンを入力している場合
+2. 実行
+
+LineToken.txtに取得したアクセストークンを入力していない場合
 ```
-    dotnet IncentiveCheckerforDemaekan.dll
-``` 
+    IncentiveCheckerforDemaekan.dll [取得したLineアクセストークン]
+```
+LineToken.txtに取得したアクセストークンを入力している場合
+```
+    IncentiveCheckerforDemaekan.dll 
+```
 
-## 実行方法(Docker)
+### Docker
 ※事前にdockerをインストールしておいてください。
-※ビルド前に以下のファイルの設定をしてください</br>
-
-IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\TargetPlace.csv</br>
-IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\LineToken.txt
 
 1. ビルド
 ```
@@ -119,21 +149,23 @@ IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\LineToken.txt
 ```    
 2. コンテナ起動（実行）
 ```
-    docker-compose up
+    docker-compose up 
 ``` 
 3. コンテナ停止
 ```
     docker-compose down
 ``` 
 
-## タスクスケジューラーへの登録例(Windows)
+## タスクスケジューラーへの登録例
+
+### Windows
 
 <img src="https://user-images.githubusercontent.com/36285803/196444072-e66561c1-3a5c-4283-b716-6a585de4214e.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196453824-31f7c7eb-da2b-42f6-a0ee-c43592991a90.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196449854-e6be6ccf-18be-4c35-933d-b4cac32a99c4.png" width="300px">
 <img src="https://user-images.githubusercontent.com/36285803/196449993-050cc5c9-9e0c-4a35-abb5-db230a93dc17.png" width="300px">
 
-## タスクスケジューラーへの登録例(Linux、Mac)
+### Mac・Linux
 ```
     crontab -e
 ```
@@ -141,4 +173,14 @@ IncentiveCheckerforDemaekan\IncentiveCheckerforDemaekan\SampleFile\LineToken.txt
 ```
     CRON_TZ="Japan"
     [mm] [hh] * * * cd [homeディレクトリからの格納ディレクトリ]; dotnet IncentiveCheckerforDemaekan.dll 
+```
+
+### Docker
+```
+    crontab -e
+```
+
+```
+    CRON_TZ="Japan"
+    [mm] [hh] * * * cd [homeディレクトリからの格納ディレクトリ]; docker-compose up
 ```
