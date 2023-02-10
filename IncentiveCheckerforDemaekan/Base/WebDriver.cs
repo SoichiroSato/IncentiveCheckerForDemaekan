@@ -23,6 +23,7 @@ namespace IncentiveCheckerforDemaekan.Base
         /// WebDriverManagerを使ってWebDriverを設定する
         /// </summary>
         /// <param name="options">chromeオプションに設定する文字列配列</param>
+        /// <param name="wait">ChromeDriverTimeOut</param>
         public WebDriver(string[]? options = null, double wait = 0)
         {
             var chromeConfig = new ChromeConfig();
