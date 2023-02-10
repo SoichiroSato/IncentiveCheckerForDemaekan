@@ -1,5 +1,5 @@
 # IncentiveCheckerforDemaekan
-# 概要
+## 概要
 
 [出前館インセンティブサイト](https://cdn.demae-can.com/contents/driver/boost/area/index.html)からcsvで指定したエリアのインセンティブ情報をLine通知するツールです。<br/>
 タスクスケジューラー等に設定して使用します。
@@ -40,7 +40,7 @@
 ## 前提
 
 1. Lineアカウントを持っている。
-2. 本プロジェクトをクローンまたはダウンロード後解答済み
+2. 本プロジェクトをクローンまたはzipダウンロード後解凍済み
 
 ## 利用準備
 
@@ -52,14 +52,14 @@
 5. Line Notifyを選択したグループに招待します。
 
 ### 2.対象地域の設定（必須）
-「File/TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
+「IncentiveCheckerforDemaekan/File/TargetPlace.csv」の2行目以降に通知したい地域を「エリア,都道府県,市区町村」の順に入力します。
 
 <img src="https://user-images.githubusercontent.com/36285803/196426396-c082219a-cb8c-4936-a4c9-c11bb39a526c.png" width="800px">
 
 ### 3.LineTokenの設定（Dockerを使う場合のみ必須）
 
 コマンドライン引数を利用しない場合は<br>
-「File/LineToken.txt」に取得したLineトークンを入力して保存します。
+「IncentiveCheckerforDemaekan/File/LineToken.txt」に取得したLineトークンを入力して保存します。
 
 ### 4.処理設定（任意）
 本ツールは一部非同期通信処理を実装しております。<br/>
@@ -90,12 +90,12 @@ https://www.google.com/intl/ja_jp/chrome/
 #### ファイルでインストールする場合
 
 1. windows<br>
-File/Windows/ChromeInstall.bat<br>
+IncentiveCheckerforDemaekan/File/Windows/ChromeInstall.bat<br>
 ※管理者権限で実行してください
 2. Linux<br>
-File/Linux/ChromeInstall.sh
+IncentiveCheckerforDemaekan/File/Linux/ChromeInstall.sh
 3. Mac<br>
-File/Mac/ChromeInstall.sh<br>
+IncentiveCheckerforDemaekan/File/Mac/ChromeInstall.sh<br>
 ※管理者権限で実行してください
 
 ## ビルド・実行方法
