@@ -1,6 +1,5 @@
-using System.Text;
+﻿using System.Text;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Data;
 
 namespace IncentiveCheckerforDemaekan
@@ -15,7 +14,23 @@ namespace IncentiveCheckerforDemaekan
         /// <summary>
         /// カレントパス
         /// </summary>
-        private static readonly string LocationPath = GetCurrentPath();
+        private static readonly string LocationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? "";
+
+        /// <summary>
+        /// ChromeOptionの配列
+        /// </summary>
+        /// <value></value>
+        private static readonly string[] ChromeOptions = 
+        {
+            "--headless",
+            "--no-sandbox",
+            "--incognito",
+            "--start-maximized",
+            "--blink-settings=imagesEnabled=false",
+            "--lang=ja",
+            "--proxy-server='direct://'",
+            "--proxy-bypass-list=*"
+        };
 
         /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
@@ -25,7 +40,6 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="args">Lineアクセストークン</param>
         static async Task<int> Main(string[] args)
         {
-            Console.WriteLine(DateTime.Now);
             string message;
             int resCode;
             try
@@ -36,7 +50,6 @@ namespace IncentiveCheckerforDemaekan
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
                 message = ex.Message;
                 resCode = 1;
             }
@@ -46,9 +59,8 @@ namespace IncentiveCheckerforDemaekan
             }
             else
             {
-                var accessToken = new FileOperate(LocationPath).ReadFile("File/LineToken.txt");
+                var accessToken = new FileOperate(LocationPath).ReadFile("./File/LineToken.txt");
                 resCode = await SendLine(accessToken, message, resCode);
-
             }
             return resCode;
         }
@@ -86,22 +98,6 @@ namespace IncentiveCheckerforDemaekan
         }
 
         /// <summary>
-        /// 実行ファイルのカレントディレクトリを取得する
-        /// </summary>
-        /// <returns>カレントディレクトリ</returns>
-        private static string GetCurrentPath()
-        {
-            var locationPath = @Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            if (locationPath == null) 
-            { 
-                return ""; 
-            }else
-            {
-                return locationPath;
-            }
-        }
-
-        /// <summary>
         /// 出前館 市区町村別ブースト情報サイトから
         /// csvファイル記載地域の明日のインセンティブ情報を取得して
         /// Line通知メッセージを作成する
@@ -110,7 +106,7 @@ namespace IncentiveCheckerforDemaekan
         private static async Task<string> CreateSendMessageAsync()
         {
             var fileOperate = new FileOperate(LocationPath);
-            var targetPlace = fileOperate.ConvertCsvToDataTable("File/TargetPlace.csv");
+            var targetPlace = fileOperate.ConvertCsvToDataTable("./File/TargetPlace.csv");
             var targetDate = DateTime.Now.AddDays(1);
             var map = AsyncFlg ? await CreateIncentiveMapAsync(targetPlace, targetDate) : CreateIncentiveMap(targetPlace, targetDate);
             var stringBuilder = new StringBuilder();
@@ -142,7 +138,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="city">市区町村</param>
         private static Dictionary<string, Dictionary<string, string>> CreateIncentiveMap(DataTable targetPlace, DateTime targetDate)
         {
-            using var webDriver = new WebDriverOperation(CreateChromeOptionsArray(), 10);
+            using var webDriver = new WebDriverOperation(ChromeOptions, 10);
             var map = new Dictionary<string, Dictionary<string, string>>();
             using var reader = targetPlace.CreateDataReader();
             while (reader.Read())
@@ -185,28 +181,8 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="city">市区町村</param>
         private static void AddMapOfIncentive(Dictionary<string, Dictionary<string, string>> map, string area, string prefecture, string city, DateTime targetDate)
         {
-            using var webDriver = new WebDriverOperation(CreateChromeOptionsArray(), 10);
+            using var webDriver = new WebDriverOperation(ChromeOptions, 10);
             map.Add(prefecture + city, webDriver.GetIncentiveInfo(area, prefecture, city, targetDate));
-        }
-
-        /// <summary>
-        /// ChromeOptionの配列を作成する
-        /// </summary>
-        /// <returns>ChromeOptionの配列</returns>
-        private static string[] CreateChromeOptionsArray()
-        {
-            var options = new List<string>()
-            {
-                "--headless",
-                "--no-sandbox",
-                "--incognito",
-                "--start-maximized",
-                "--blink-settings=imagesEnabled=false",
-                "--lang=ja",
-                "--proxy-server='direct://'",
-                "--proxy-bypass-list=*"
-            };
-            return options.ToArray();
         }
     }
 }
