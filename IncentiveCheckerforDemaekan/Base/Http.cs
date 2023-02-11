@@ -8,7 +8,7 @@ namespace IncentiveCheckerforDemaekan.Base
     public class Http
     {
         /// <summary>
-        /// HttpClietオブジェクト
+        /// HttpClientオブジェクト
         /// </summary>
         public HttpClient HttpClient { get; set; }
 
@@ -61,7 +61,6 @@ namespace IncentiveCheckerforDemaekan.Base
         /// </summary>
         /// <param name="url">リクエスト先</param>
         /// <param name="contentType">ContentType</param>
-        /// <param name="postdata">Postデータ</param>
         /// <param name="authenticationHeaderValue">basic認証</param>
         /// <returns>レスポンス結果</returns>
         public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue? authenticationHeaderValue = null)

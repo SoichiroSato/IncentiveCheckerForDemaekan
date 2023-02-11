@@ -25,10 +25,11 @@ namespace IncentiveCheckerforDemaekan
         /// </summary>
         /// <param name="message">送信内容</param>
         /// <returns>Line通知メッセージを送信するタスク</returns>
-        public async Task SendMessage(string message)
+        public async Task<HttpResponseMessage> SendMessage(string message)
         {
             var content = new FormUrlEncodedContent(new Dictionary<string, string> { { "message", message } });
-            await PostRequestAsync(AppConfig.GetAppSettingsValue("lineUrl"), content, new AuthenticationHeaderValue("Bearer", AccessToken));
+            var header = new AuthenticationHeaderValue("Bearer", AccessToken);
+            return await PostRequestAsync(AppConfig.GetAppSettingsValue("lineUrl"), content, header);
         }
     }
 }

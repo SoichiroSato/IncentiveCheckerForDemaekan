@@ -1,0 +1,73 @@
+@startuml IncentiveCheckerforDemaekan
+class Main{
+    {static} bool 非同期フラグ
+    {static} string カレントパス
+    {static} Task<int> メイン処理()
+    {static} void GoogleChromeのチェック()
+    {static} Task<Dictionary<string, Dictionary<string, string>>> 対象のインセンティブ情報を取得()
+    {static} void 個々のインセンティブ情報を取得()
+    {static} Dictionary<string, Dictionary<string, string>> 対象のインセンティブ情報を取得()
+    {static} string 通知メッセージを作成()
+    {static} Task<int> Lineに通知()
+}
+
+class ファイル操作クラス{
+    string 実行ディレクトリ
+    DataTable csvファイルをDataTableに変換()
+    string ファイルを読込
+    void ファイルを出力
+}
+
+class AppConfig操作クラス{
+    {static} string AppSettingsの値を取得()
+}
+package Base{
+    class Http{
+        HttpClient HttpClient
+        Task<HttpResponseMessage> GetRequest()
+        Task<HttpResponseMessage> PostRequest()
+    }
+
+    class 外部アプリケーション実行クラス{
+        Process Process
+        string 外部プロセスを起動()
+        void Dispose()
+    }
+
+    class WebDriver基底クラス{
+        ChromeDriverService ドライバーサービス
+        ChromeDriver ドライバー
+        void Dispose()
+    }
+}
+class インセンティブ情報サイト操作クラス{
+    Dictionary<string,string> インセンティブ情報を取得()
+}
+
+class ブラウザ系処理クラス{
+    string カレントパス
+    void Chrome関連スクリプトを実行()
+}
+
+class Line操作クラス{
+    string アクセストークン
+    Task<HttpResponseMessage> Line通知メッセージを送信()
+}
+
+
+interface IDsipose{
+
+}
+
+
+Main.> ブラウザ系処理クラス
+Main..> AppConfig操作クラス
+ファイル操作クラス<. Main
+インセンティブ情報サイト操作クラス <.. Main
+Line操作クラス <.. Main
+Http <|-- Line操作クラス
+IDsipose <|-- 外部アプリケーション実行クラス
+IDsipose <|-- WebDriver基底クラス
+WebDriver基底クラス <|-- インセンティブ情報サイト操作クラス
+外部アプリケーション実行クラス <|-- ブラウザ系処理クラス
+@enduml
