@@ -81,7 +81,7 @@
 
 
 ### 5.GoogleChromeの準備（任意・エラーが出た場合・Docker以外）
-本ツールでは実行時にChormeのインストールチェック処理が組み込まれていますが、<br>
+本ツールでは実行時にChromeのインストールチェック処理が組み込まれていますが、<br>
 予めインストールしたい場合は別ブラウザでインストーラーをダウンロード実行するか以下のファイルを実行してください
 
 #### 別ブラウザでインストーラーをダウンロード実行する場合
@@ -119,10 +119,13 @@ LineToken.txtに取得したアクセストークンを入力していない場�
 ```
     IncentiveCheckerforDemaekan.exe [取得したLineアクセストークン]
 ```
+
 LineToken.txtに取得したアクセストークンを入力している場合
 ```
     IncentiveCheckerforDemaekan.exe 
 ```
+
+    またはIncentiveCheckerforDemaekan.exe をクリック
 
 ### Mac・Linux
 1. ビルド
@@ -133,11 +136,11 @@ LineToken.txtに取得したアクセストークンを入力している場合
 
 LineToken.txtに取得したアクセストークンを入力していない場合
 ```
-    IncentiveCheckerforDemaekan.dll [取得したLineアクセストークン]
+    dotnet IncentiveCheckerforDemaekan.dll [取得したLineアクセストークン]
 ```
 LineToken.txtに取得したアクセストークンを入力している場合
 ```
-    IncentiveCheckerforDemaekan.dll 
+    dotnet IncentiveCheckerforDemaekan.dll 
 ```
 
 ### Docker
