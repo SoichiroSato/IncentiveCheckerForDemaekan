@@ -59,7 +59,7 @@ namespace IncentiveCheckerforDemaekan
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) { return; }
             var processStartInfo = new ProcessStartInfo
             {
-                FileName = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+                FileName = "/bin/bash",
                 Arguments = Path.Combine(LocationPath, "File/Mac/ChromeInstall.sh"),
                 RedirectStandardOutput = true,
                 UseShellExecute = false
