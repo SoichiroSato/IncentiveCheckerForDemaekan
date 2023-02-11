@@ -125,7 +125,7 @@ LineToken.txtに取得したアクセストークンを入力している場合
     IncentiveCheckerforDemaekan.exe 
 ```
 
-    またはIncentiveCheckerforDemaekan.exe をクリック
+またはIncentiveCheckerforDemaekan.exe をクリック
 
 ### Mac・Linux
 1. ビルド
