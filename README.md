@@ -35,7 +35,7 @@
 -   PlantUml
 
 ## クラス図
-![image](https://user-images.githubusercontent.com/36285803/215804142-932ec2de-46ab-49d5-9621-31233b3936b1.png)
+<img src="https://www.plantuml.com/plantuml/proxy?fmt=svg&src=https://raw.githubusercontent.com/SoichiroSato/IncentiveCheckerforDemaekan/master/ClassDiagram.pu" />
 
 ## 前提
 
