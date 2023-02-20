@@ -55,7 +55,7 @@ class Line操作クラス{
 }
 
 
-interface IDsipose{
+interface IDispose{
 
 }
 
@@ -66,8 +66,8 @@ Main..> AppConfig操作クラス
 インセンティブ情報サイト操作クラス <.. Main
 Line操作クラス <.. Main
 Http <|-- Line操作クラス
-IDsipose <|-- 外部アプリケーション実行クラス
-IDsipose <|-- WebDriver基底クラス
+IDispose <|-- 外部アプリケーション実行クラス
+IDispose <|-- WebDriver基底クラス
 WebDriver基底クラス <|-- インセンティブ情報サイト操作クラス
 外部アプリケーション実行クラス <|-- ブラウザ系処理クラス
 @enduml
