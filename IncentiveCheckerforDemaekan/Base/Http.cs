@@ -41,14 +41,14 @@ namespace IncentiveCheckerforDemaekan.Base
         /// <param name="url">リクエスト先</param>
         /// <param name="authenticationHeaderValue">basic認証</param>
         /// <returns>レスポンス結果</returns>
-        public async Task<HttpResponseMessage> GetRequestAsync(string url, AuthenticationHeaderValue? authenticationHeaderValue = null)
+        public async Task<HttpResponseMessage> GetRequestAsync(string url, AuthenticationHeaderValue authenticationHeaderValue = null)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(url)
             };
-            if (authenticationHeaderValue != null)
+            if (authenticationHeaderValue is not null)
             {
                 request.Headers.Authorization = authenticationHeaderValue;
             }
@@ -63,15 +63,14 @@ namespace IncentiveCheckerforDemaekan.Base
         /// <param name="contentType">ContentType</param>
         /// <param name="authenticationHeaderValue">basic認証</param>
         /// <returns>レスポンス結果</returns>
-        public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue? authenticationHeaderValue = null)
+        public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue authenticationHeaderValue = null)
         {
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
                 RequestUri = new Uri(url),
-
             };
-            if (authenticationHeaderValue != null)
+            if (authenticationHeaderValue is not null)
             {
                 request.Headers.Authorization = authenticationHeaderValue;
             }

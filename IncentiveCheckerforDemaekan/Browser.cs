@@ -73,21 +73,14 @@ namespace IncentiveCheckerforDemaekan
         private void InstallChromeWindows()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }           
-            RegistryKey? browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
+            RegistryKey browserKeys = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Clients\StartMenuInternet");
             browserKeys ??= Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Clients\StartMenuInternet");
-            if (browserKeys == null) { return; }
             var subKeyNames = browserKeys.GetSubKeyNames();
-            var browsers = new List<string>();
-            foreach (var browser in subKeyNames)
-            {
-                // ブラウザーの名前
-                RegistryKey? browserKey = browserKeys.OpenSubKey(browser);
-                if (browserKey == null) { return; }
-                var browserName = browserKey.GetValue(null);
-                if (browserName == null) { return; }
-                browsers.Add((string)browserName);
-            }
-            if(browsers.Contains("Google Chrome")) { return; }
+            var browsers = (from browser in subKeyNames// ブラウザーの名前
+                            let browserKey = browserKeys.OpenSubKey(browser)
+                            let browserName = browserKey.GetValue(null)
+                            select (string)browserName).ToList();
+            if (browsers.Contains("Google Chrome")) { return; }
             var processStartInfo = new ProcessStartInfo
             {
                 FileName = Environment.GetEnvironmentVariable("ComSpec"),

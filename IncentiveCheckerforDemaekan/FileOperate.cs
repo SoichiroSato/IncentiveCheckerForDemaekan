@@ -33,9 +33,8 @@ namespace IncentiveCheckerforDemaekan
             using var txtParser = new TextFieldParser(Path.Combine(LocationPath, file));
             var ret = new DataTable();
             txtParser.SetDelimiters(",");
-            string[]? columns = txtParser.ReadFields();
-
-            if (columns != null)
+            string[] columns = txtParser.ReadFields();
+            if (columns is not null)
             {
                 foreach (var column in columns)
                 {
@@ -44,8 +43,8 @@ namespace IncentiveCheckerforDemaekan
             }
             while (!txtParser.EndOfData)
             {
-                string[]? values = txtParser.ReadFields();
-                if (values != null)
+                string[] values = txtParser.ReadFields();
+                if (values is not null)
                 {
                     var row = ret.NewRow();
                     for (int i = 0; i < values.Length; i++)
@@ -64,7 +63,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="file">ファイルのフルパス</param>
         /// <param name="encoding">エンコードタイプ</param>
         /// <returns>記載内容</returns>
-        public string ReadFile(string file, Encoding? encoding = null)
+        public string ReadFile(string file, Encoding encoding = null)
         {
             encoding ??= Encoding.UTF8;
             using var reader = new StreamReader(Path.Combine(LocationPath, file), encoding);
@@ -78,7 +77,7 @@ namespace IncentiveCheckerforDemaekan
         /// <param name="contents">ファイルの中身</param>
         /// <param name="append">上書きか追記か</param>
         /// <param name="encoding">エンコードタイプ</param>
-        public void WriteFile(string file, string contents,bool append = false, Encoding? encoding = null)
+        public void WriteFile(string file, string contents,bool append = false, Encoding encoding = null)
         {
             encoding ??= Encoding.UTF8;
             using var streamWriter = new StreamWriter(Path.Combine(LocationPath, file),append, encoding);
