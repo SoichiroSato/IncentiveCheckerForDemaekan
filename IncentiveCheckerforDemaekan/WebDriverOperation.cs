@@ -36,18 +36,21 @@ namespace IncentiveCheckerforDemaekan
             var body = table.FindElement(By.Id("resultbody"));
             var rows = body.FindElements(By.TagName("tr"));
             var dic = new Dictionary<string, string>();
-            foreach (var row in rows)
+            foreach (var td in from row in rows
+                               let td = row.FindElements(By.TagName("td"))
+                               select td)
             {
-                var td = row.FindElements(By.TagName("td"));
                 //column[0]は市区町村
                 if (td[0].Text != city) { continue; }
                 //td[0]とcolumn[0]は読み取らない
-                for (int i =1;i<td.Count;i++)
+                for (int i = 1; i < td.Count; i++)
                 {
                     dic.Add(columns[i].Text, td[i].Text);
                 }
-                if(dic.Count > 0) { break; }
+
+                if (dic.Count > 0) { break; }
             }
+
             return dic;
         }
     }
