@@ -24,7 +24,7 @@ namespace IncentiveCheckerforDemaekan.Base
         /// </summary>
         /// <param name="options">chromeオプションに設定する文字列配列</param>
         /// <param name="wait">ChromeDriverTimeOut</param>
-        public WebDriver(string[]? options = null, double wait = 0)
+        public WebDriver(string[] options = null, double wait = 0)
         {
             var chromeConfig = new ChromeConfig();
             new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
@@ -41,11 +41,8 @@ namespace IncentiveCheckerforDemaekan.Base
                 chromeOptions.AddArguments(options);
                 Driver = new ChromeDriver(DriverService, chromeOptions);
             }
-            if (wait != 0)
-            {
-                Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
-            }
-
+            if (wait == 0){ return; }
+            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
         }
 
         /// <summary>

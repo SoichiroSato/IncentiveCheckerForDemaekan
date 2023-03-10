@@ -12,7 +12,7 @@ namespace IncentiveCheckerforDemaekan.Base
         /// Process.Startがnullを返すケースがあるためusingが使えないので
         /// IDisposeで対応する
         /// </summary>
-        public Process? Process { get; set; }
+        public Process Process { get; set; }
 
         /// <summary>
         /// コマンドで外部プロセスを起動する
@@ -21,13 +21,9 @@ namespace IncentiveCheckerforDemaekan.Base
         public string ExecuteFile(ProcessStartInfo processStartInfo)
         {
             Process = Process.Start(processStartInfo);
-            string res = "";
-            if (Process != null)
-            {
-                res = Process.StandardOutput.ReadToEnd();
-                //実行が終わるまで待機
-                Process.WaitForExit();
-            }
+            string res = Process.StandardOutput.ReadToEnd();
+            //実行が終わるまで待機
+            Process.WaitForExit();
             return res;
         }
 
