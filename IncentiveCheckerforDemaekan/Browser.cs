@@ -2,7 +2,6 @@
 using Microsoft.Win32;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
 
 namespace IncentiveCheckerforDemaekan
 {
@@ -29,7 +28,6 @@ namespace IncentiveCheckerforDemaekan
         /// Chromeをインストールする
         /// 各ファンクションでOSチェックを行う
         /// </summary>
-        [SupportedOSPlatform("windows")]
         public void InstallChrome()
         {
             InstallChromeWindows();
@@ -72,7 +70,6 @@ namespace IncentiveCheckerforDemaekan
         /// <summary>
         /// windowsでChromeがインストールされているか確認しなかったらインストールする
         /// </summary>
-        [SupportedOSPlatform("windows")]
         private void InstallChromeWindows()
         {
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) { return; }           
