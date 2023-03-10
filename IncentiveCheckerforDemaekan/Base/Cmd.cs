@@ -44,7 +44,7 @@ namespace IncentiveCheckerforDemaekan.Base
         {
             if (disposing)
             {
-                if (Process != null)
+                if (Process is not null)
                 {
                     Process.Dispose();
                 }

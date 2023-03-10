@@ -34,7 +34,7 @@ namespace IncentiveCheckerforDemaekan
             var ret = new DataTable();
             txtParser.SetDelimiters(",");
             string[] columns = txtParser.ReadFields();
-            if (columns != null)
+            if (columns is not null)
             {
                 foreach (var column in columns)
                 {
@@ -44,7 +44,7 @@ namespace IncentiveCheckerforDemaekan
             while (!txtParser.EndOfData)
             {
                 string[] values = txtParser.ReadFields();
-                if (values != null)
+                if (values is not null)
                 {
                     var row = ret.NewRow();
                     for (int i = 0; i < values.Length; i++)

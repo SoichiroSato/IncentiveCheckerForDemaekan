@@ -31,7 +31,7 @@ namespace IncentiveCheckerforDemaekan.Base
             string driverVersion = chromeConfig.GetMatchingBrowserVersion();
             string driverPath = $"./Chrome/{driverVersion}/X64/";
             DriverService = ChromeDriverService.CreateDefaultService(driverPath);
-            if (options == null)
+            if (options is null)
             {
                 Driver = new ChromeDriver(DriverService);
             }

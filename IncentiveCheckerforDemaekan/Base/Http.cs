@@ -48,7 +48,7 @@ namespace IncentiveCheckerforDemaekan.Base
                 Method = HttpMethod.Get,
                 RequestUri = new Uri(url)
             };
-            if (authenticationHeaderValue != null)
+            if (authenticationHeaderValue is not null)
             {
                 request.Headers.Authorization = authenticationHeaderValue;
             }
@@ -70,7 +70,7 @@ namespace IncentiveCheckerforDemaekan.Base
                 Method = HttpMethod.Post,
                 RequestUri = new Uri(url),
             };
-            if (authenticationHeaderValue != null)
+            if (authenticationHeaderValue is not null)
             {
                 request.Headers.Authorization = authenticationHeaderValue;
             }
