@@ -34,25 +34,16 @@ namespace IncentiveCheckerforDemaekan
             var ret = new DataTable();
             txtParser.SetDelimiters(",");
             string[] columns = txtParser.ReadFields();
-            if (columns is not null)
+            foreach (var column in columns ?? Enumerable.Empty<string>())
             {
-                foreach (var column in columns)
-                {
-                    ret.Columns.Add(column);
-                }
+                ret.Columns.Add(column);
             }
             while (!txtParser.EndOfData)
             {
                 string[] values = txtParser.ReadFields();
-                if (values is not null)
-                {
-                    var row = ret.NewRow();
-                    for (int i = 0; i < values.Length; i++)
-                    {
-                        row[i] = values[i];
-                    }
-                    ret.Rows.Add(row);
-                }
+                if (values is null) { continue; }
+                var row = ret.NewRow();
+                ret.Rows.Add(values);
             }
             return ret;
         }

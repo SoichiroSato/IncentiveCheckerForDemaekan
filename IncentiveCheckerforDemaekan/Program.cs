@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Reflection;
 using System.Data;
+using System.Linq;
 
 namespace IncentiveCheckerforDemaekan
 {
@@ -116,14 +117,13 @@ namespace IncentiveCheckerforDemaekan
             foreach (var (address, incentive) in map)
             {
                 stringBuilder.AppendLine(address);
-                foreach (var (time, magnification) in incentive)
+                foreach (var timeAndMagnification in from timeAndMagnification in incentive//1.1倍以上の時間帯だけ抽出する
+                                                     .Where(time => double.TryParse(time.Value, out double val) && val > 1.0)
+                                                     select timeAndMagnification)
                 {
-                    //1.1倍以上の時間帯だけ抽出する
-                    if (double.TryParse(magnification, out double val) && val > 1.0)
-                    {
-                        stringBuilder.AppendLine($"{time}:{val}");
-                    }
+                    stringBuilder.AppendLine($"{timeAndMagnification.Key}:{timeAndMagnification.Value}");
                 }
+
                 stringBuilder.AppendLine();
             }
             return stringBuilder.ToString();
