@@ -1,82 +1,81 @@
 ﻿using System.Net.Http.Headers;
 
-namespace IncentiveCheckerforDemaekan.Base
+namespace IncentiveCheckerforDemaekan.Base;
+
+/// <summary>
+/// http操作クラス
+/// </summary>
+public class Http
 {
     /// <summary>
-    /// http操作クラス
+    /// HttpClientオブジェクト
     /// </summary>
-    public class Http
+    public HttpClient HttpClient { get; set; }
+
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    public Http(int timeout = 100000)
     {
-        /// <summary>
-        /// HttpClientオブジェクト
-        /// </summary>
-        public HttpClient HttpClient { get; set; }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public Http(int timeout = 100000)
+        HttpClient = new HttpClient
         {
-            HttpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMilliseconds(timeout)
-            };
-        }
+            Timeout = TimeSpan.FromMilliseconds(timeout)
+        };
+    }
 
-        /// <summary>
-        /// コンストラクタ
-        /// CookieとかAllowRedirectとかはここで設定する
-        /// </summary>
-        public Http(HttpMessageHandler httpMessageHandler, int timeout = 100000)
+    /// <summary>
+    /// コンストラクタ
+    /// CookieとかAllowRedirectとかはここで設定する
+    /// </summary>
+    public Http(HttpMessageHandler httpMessageHandler, int timeout = 100000)
+    {
+        HttpClient = new HttpClient(httpMessageHandler)
         {
-            HttpClient = new HttpClient(httpMessageHandler)
-            {
-                Timeout = TimeSpan.FromMilliseconds(timeout)
-            };
-        }
+            Timeout = TimeSpan.FromMilliseconds(timeout)
+        };
+    }
 
-        /// <summary>
-        /// Getリクエストをする
-        /// </summary>
-        /// <param name="url">リクエスト先</param>
-        /// <param name="authenticationHeaderValue">basic認証</param>
-        /// <returns>レスポンス結果</returns>
-        public async Task<HttpResponseMessage> GetRequestAsync(string url, AuthenticationHeaderValue authenticationHeaderValue = null)
+    /// <summary>
+    /// Getリクエストをする
+    /// </summary>
+    /// <param name="url">リクエスト先</param>
+    /// <param name="authenticationHeaderValue">basic認証</param>
+    /// <returns>レスポンス結果</returns>
+    public async Task<HttpResponseMessage> GetRequestAsync(string url, AuthenticationHeaderValue authenticationHeaderValue = null)
+    {
+        var request = new HttpRequestMessage
         {
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Get,
-                RequestUri = new Uri(url)
-            };
-            if (authenticationHeaderValue is not null)
-            {
-                request.Headers.Authorization = authenticationHeaderValue;
-            }
-            var res = await HttpClient.SendAsync(request);
-            return res;
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(url)
+        };
+        if (authenticationHeaderValue is not null)
+        {
+            request.Headers.Authorization = authenticationHeaderValue;
         }
+        var res = await HttpClient.SendAsync(request);
+        return res;
+    }
 
-        /// <summary>
-        /// Postリクエストをする
-        /// </summary>
-        /// <param name="url">リクエスト先</param>
-        /// <param name="contentType">ContentType</param>
-        /// <param name="authenticationHeaderValue">basic認証</param>
-        /// <returns>レスポンス結果</returns>
-        public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue authenticationHeaderValue = null)
+    /// <summary>
+    /// Postリクエストをする
+    /// </summary>
+    /// <param name="url">リクエスト先</param>
+    /// <param name="contentType">ContentType</param>
+    /// <param name="authenticationHeaderValue">basic認証</param>
+    /// <returns>レスポンス結果</returns>
+    public async Task<HttpResponseMessage> PostRequestAsync(string url, HttpContent content, AuthenticationHeaderValue authenticationHeaderValue = null)
+    {
+        var request = new HttpRequestMessage
         {
-            var request = new HttpRequestMessage
-            {
-                Method = HttpMethod.Post,
-                RequestUri = new Uri(url),
-            };
-            if (authenticationHeaderValue is not null)
-            {
-                request.Headers.Authorization = authenticationHeaderValue;
-            }
-            request.Content = content;
-            var res = await HttpClient.SendAsync(request);
-            return res;
+            Method = HttpMethod.Post,
+            RequestUri = new Uri(url),
+        };
+        if (authenticationHeaderValue is not null)
+        {
+            request.Headers.Authorization = authenticationHeaderValue;
         }
+        request.Content = content;
+        var res = await HttpClient.SendAsync(request);
+        return res;
     }
 }

@@ -3,68 +3,67 @@ using WebDriverManager;
 using WebDriverManager.DriverConfigs.Impl;
 using WebDriverManager.Helpers;
 
-namespace IncentiveCheckerforDemaekan.Base
+namespace IncentiveCheckerforDemaekan.Base;
+
+/// <summary>
+/// WebDriver基底クラス
+/// </summary>
+public class WebDriver : IDisposable
 {
     /// <summary>
-    /// WebDriver基底クラス
+    /// ChromeDriverService
     /// </summary>
-    public class WebDriver : IDisposable
+    public ChromeDriverService DriverService { get; }
+    /// <summary>
+    /// ChromeDriver
+    /// </summary>
+    public ChromeDriver Driver { get; }
+    /// <summary>
+    /// コンストラクタ
+    /// WebDriverManagerを使ってWebDriverを設定する
+    /// </summary>
+    /// <param name="options">chromeオプションに設定する文字列配列</param>
+    /// <param name="wait">ChromeDriverTimeOut</param>
+    public WebDriver(string[] options = null, double wait = 0)
     {
-        /// <summary>
-        /// ChromeDriverService
-        /// </summary>
-        public ChromeDriverService DriverService { get; }
-        /// <summary>
-        /// ChromeDriver
-        /// </summary>
-        public ChromeDriver Driver { get; }
-        /// <summary>
-        /// コンストラクタ
-        /// WebDriverManagerを使ってWebDriverを設定する
-        /// </summary>
-        /// <param name="options">chromeオプションに設定する文字列配列</param>
-        /// <param name="wait">ChromeDriverTimeOut</param>
-        public WebDriver(string[] options = null, double wait = 0)
+        var chromeConfig = new ChromeConfig();
+        new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
+        string driverVersion = chromeConfig.GetMatchingBrowserVersion();
+        string driverPath = $"./Chrome/{driverVersion}/X64/";
+        DriverService = ChromeDriverService.CreateDefaultService(driverPath);
+        if (options is null)
         {
-            var chromeConfig = new ChromeConfig();
-            new DriverManager().SetUpDriver(chromeConfig, VersionResolveStrategy.MatchingBrowser);
-            string driverVersion = chromeConfig.GetMatchingBrowserVersion();
-            string driverPath = $"./Chrome/{driverVersion}/X64/";
-            DriverService = ChromeDriverService.CreateDefaultService(driverPath);
-            if (options is null)
-            {
-                Driver = new ChromeDriver(DriverService);
-            }
-            else
-            {
-                var chromeOptions = new ChromeOptions();
-                chromeOptions.AddArguments(options);
-                Driver = new ChromeDriver(DriverService, chromeOptions);
-            }
-            if (wait == 0){ return; }
-            Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
+            Driver = new ChromeDriver(DriverService);
         }
-
-        /// <summary>
-        /// Dispose
-        /// </summary>
-        public void Dispose()
+        else
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments(options);
+            Driver = new ChromeDriver(DriverService, chromeOptions);
         }
+        if (wait == 0){ return; }
+        Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(wait);
+    }
 
-        /// <summary>
-        /// Dispose基底処理
-        /// </summary>
-        /// <param name="disposing">disposing</param>
-        protected virtual void Dispose(bool disposing)
+    /// <summary>
+    /// Dispose
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Dispose基底処理
+    /// </summary>
+    /// <param name="disposing">disposing</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            if (disposing)
-            {
-                Driver.Quit();
-                DriverService.Dispose();
-            }
+            Driver.Quit();
+            DriverService.Dispose();
         }
     }
 }
